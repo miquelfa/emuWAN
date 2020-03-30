@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>emuWAN</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/mockup/bootstrap/css/bootstrap.min.css">
+
+        <link rel="stylesheet" href="/mockup/style.css">
+
+        <script src="/mockup/jQuery/jquery-3.4.1.min.js"></script>
+        <script src="/mockup/bootstrap/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow">
+            <a class="navbar-brand" href="#">emuWAN</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarsExample04">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Interfaces <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Routing</a>
+                    </li>
+                    <!--
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>
+                    -->
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container-fluid" style="margin-top: 20px">
+            <div class="row">
+                <div class="col-sm-10">
+                    <h1>Interfaces</h1>
+                </div>
+                <div class="col-sm-2 my-auto">
+                    <button type="button" class="btn btn-secondary float-right">Refresh</button>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="col shadow box-interface py-1">
+                        <h2>enp0s3 <span class="dot dot-success"></span></h2>
+                        <div class="mt-1">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                        </div>
+                        <hr>
+                        <h2>Simulation</h2>
+                        <div class="mt-1">
+                            <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                            <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                            <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s8</b> <span class="dot dot-danger" data-toggle="tooltip" data-placement="top" title="Interface is down"></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading d-block">
+            <div class="container text-center">
+                <div class="spinner-grow" style="width: 3rem; height: 3rem; margin-top: 30vh;" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+    </body>
+    <script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    </script>
+</html>

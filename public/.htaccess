@@ -1,0 +1,12 @@
+RewriteEngine on
+RewriteBase /
+
+# add trailing slash
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule .*[^/]$ /$0/ [L,R=301]
+
+RewriteRule ^api/$                                                                 api.php [L,QSA]
+RewriteRule ^api/([networkinterface|simulation]*)/$                                api.php?endpoint=$1 [L,QSA]
+RewriteRule ^api/([networkinterface|simulation]*)/([a-z0-9]*)/$                    api.php?endpoint=$1&id=$2 [L,QSA]
+RewriteRule ^api/([networkinterface|simulation]*)/([a-zA-Z]*)/$                    api.php?endpoint=$1&action=$2 [L,QSA]
+RewriteRule ^api/([networkinterface|simulation]*)/([a-z0-9]*)/([a-zA-Z]*)/$        api.php?endpoint=$1&action=$3&id=$2 [L,QSA]

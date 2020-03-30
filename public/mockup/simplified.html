@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>emuWAN</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/mockup/bootstrap/css/bootstrap.min.css">
+
+        <link rel="stylesheet" href="/mockup/style.css">
+
+        <script src="/mockup/jQuery/jquery-3.4.1.min.js"></script>
+        <script src="/mockup/bootstrap/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body>
+        <div class="container-fluid" style="margin-top: 20px">
+            <div class="row justify-content-center">
+                <div class="col-sm-6">
+                    <h1>Interfaces</h1>
+                </div>
+                <div class="col-sm-2 my-auto">
+                    <button type="button" class="btn btn-secondary float-right">Refresh</button>
+                </div>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="col shadow box-interface py-1">
+                        <h2>enp0s3 <span class="dot dot-success"></span></h2>
+                        <div class="mt-1">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                        </div>
+                        <hr>
+                        <h2>Simulation</h2>
+                        <div class="mt-1">
+                            <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                            <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                            <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s8</b> <span class="dot dot-danger" data-toggle="tooltip" data-placement="top" title="Interface is down"></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 p-2">
+                    <div class="card shadow box-interface">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <h2><b>enp0s9</b> <span class="dot dot-success" data-toggle="tooltip" data-placement="top" title="Interface is up "></span></h2>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" class="btn btn-sm btn-secondary float-right">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="font-weight-bold">MAC Address: </span> 08:00:27:17:4b:b0<br/>
+                            <span class="font-weight-bold">Link speed: </span> 1000 Mbps<br/>
+                            <span class="font-weight-bold">MTU: </span> 1500<br/>
+                            <hr class="sm">
+                            <span class="font-weight-bold">IPv4 Address: </span> 192.168.0.240/24<br/>
+                            <span class="font-weight-bold">Broadcast: </span> 192.168.0.255<br/>
+                            <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm dot-danger"></span><br/>
+                            <hr>
+                            <h2>Simulation</h2>
+                            <div class="mt-1">
+                                <span class="font-weight-bold">Delay: </span> 20 ms<br/>
+                                <span class="font-weight-bold">Packet reordering: </span> 5 %<br/>
+                                <span class="font-weight-bold">Packet loss: </span> 4 %<br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    </script>
+</html>
