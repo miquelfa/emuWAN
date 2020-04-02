@@ -25,14 +25,14 @@
             }
             
             $this->app->getResponse()->setSuccess(TRUE);
-            $this->app->getResponse()->set(['simulation' => $result]);
+            $this->app->getResponse()->set($result);
         }
 
         public function post()
         {
-            $params['delay'] = \emuWAN\Tools::getArrayValue($_POST, 'delay');
-            $params['loss'] = \emuWAN\Tools::getArrayValue($_POST, 'loss');
-            $params['reorder'] = \emuWAN\Tools::getArrayValue($_POST, 'reorder');
+            $params['delay'] = $this->getParam('delay');
+            $params['loss'] = $this->getParam('loss');
+            $params['reorder'] = $this->getParam('reorder');
 
             $fail = false;
             if (strlen($params['delay']) && (!is_numeric($params['delay']) || $params['delay'] < 1)) {

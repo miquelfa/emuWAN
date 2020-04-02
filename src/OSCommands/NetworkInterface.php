@@ -31,11 +31,13 @@
         public static function getInterfaceDetails($interface)
         {
             $details = [
+                'id' => $interface,
                 'status' => null,
                 'mtu' => null,
                 'MAC' => null,
                 'speed' => null,
                 'IP4' => [
+                    'status' => false,
                     'CIDR' => null,
                     'address' => null,
                     'mask' => null,
@@ -56,6 +58,7 @@
             }
             if (preg_match('/inet\ (([0-9]{1,3}\.){3}([0-9]{1,3}){1}\/[0-9]{1,2})/', $out, $ip4cidr)) {
                 $exploded = explode('/', $ip4cidr[1]);
+                $details['IP4']['status'] = true;
                 $details['IP4']['CIDR'] = $ip4cidr[1];
                 $details['IP4']['address'] = $exploded[0];
                 $details['IP4']['mask'] = $exploded[1];

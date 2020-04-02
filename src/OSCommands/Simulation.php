@@ -41,8 +41,10 @@
 
         private function getSimulation()
         {
+            $status = !is_null($this->delay) && !is_null($this->loss) && !is_null($this->reorder);
             return [
-                'interface' => $this->interface,
+                'id' => $this->interface,
+                'status' => $status,
                 'delay' => $this->delay,
                 'loss' => $this->loss,
                 'reorder' => $this->reorder

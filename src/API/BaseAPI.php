@@ -11,11 +11,13 @@
     {
         protected $app = null;
         protected $interface = null;
+        protected $params = null;
 
         function __construct()
         {
             $this->app = \emuWAN\API\API::getInstance();
             $this->interface = \emuWAN\Tools::getArrayValue($_GET, 'id');
+            $this->fillParams();
         }
 
         protected function checkInterface()
@@ -35,6 +37,16 @@
                 return false;
             }
             return true;
+        }
+
+        private function fillParams()
+        {
+            $this->params = json_decode(file_get_contents('php://input'), true);
+        }
+
+        protected function getParam($param, $default = null)
+        {
+            return \emuWAN\Tools::getArrayValue($this->params, $param, $default);
         }
     }
 ?>

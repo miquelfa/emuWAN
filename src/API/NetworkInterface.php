@@ -16,7 +16,7 @@
             if (is_null($this->interface)) {
                 $response = $this->getAllInterfaces();
                 $app->getResponse()->setSuccess(true);
-                $app->getResponse()->set(['interfaces' => $response]);
+                $app->getResponse()->set($response);
                 return true;
             }
             
@@ -35,7 +35,7 @@
 
             foreach (\emuWAN\OSCommands\NetworkInterface::getDeviceInterfaceList() as $interface) {
                 if ($interface == 'lo') continue;
-                $response[$interface] = \emuWAN\OSCommands\NetworkInterface::getInterfaceDetails($interface);
+                $response[] = \emuWAN\OSCommands\NetworkInterface::getInterfaceDetails($interface);
             }
 
             return $response;

@@ -10,32 +10,40 @@
 
         <script src="/vendor/jQuery/jquery-3.4.1.min.js"></script>
         <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="/vendor/kj/kj.js"></script>
+        <script src="/vendor/mustache/mustache.min.js"></script>
     </head>
     <body>
-        <div class="container-fluid d-none" style="margin-top: 20px">
+        <div class="container-fluid" style="margin-top: 20px" id="main-panel">
             <div class="row justify-content-center">
                 <div class="col-sm-6">
                     <h1>Interfaces</h1>
                 </div>
                 <div class="col-sm-2 my-auto">
-                    <button type="button" class="btn btn-secondary float-right">Refresh</button>
+                    <button type="button" class="btn btn-primary float-right">Refresh</button>
                 </div>
             </div>
             
-            <div class="row justify-content-center">
+            <div class="row justify-content-center" id="interface-cards">
 
             </div>
         </div>
 
-        <div class="loading d-block">
+        <div id="emuWAN-modal" class="modal fade bd-example-modal-lg" data-backdrop="static" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div id="emuWAN-modal-content" class="modal-content">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div id="loader" class="loading">
             <div class="container text-center">
                 <div class="col" style="margin-top: 30vh;">
-                    <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+                    <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col text-primary">
                     <h2>emuWAN</h2>
                 </div>
             </div>
@@ -43,10 +51,4 @@
     </body>
 
     <script src="/js/emuWAN.js"></script>
-
-    <script type="text/javascript">
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-    </script>
 </html>
