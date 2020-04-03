@@ -1,5 +1,5 @@
-<div class="col-xl-3 col-lg-4 col-md-6 p-2">
-    <div class="card shadow box-interface" data-interfaceId="{{id}}">
+<div class="col-xl-3 col-lg-4 col-md-6 p-2" data-interfaceId="{{id}}">
+    <div class="card shadow box-interface">
         <div class="card-header">
             <div class="row">
                 <div class="col-sm-8">

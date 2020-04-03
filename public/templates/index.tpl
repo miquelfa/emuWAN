@@ -19,7 +19,7 @@
                     <h1>Interfaces</h1>
                 </div>
                 <div class="col-sm-2 my-auto">
-                    <button type="button" class="btn btn-primary float-right">Refresh</button>
+                    <!-- <button type="button" class="btn btn-primary float-right">Refresh</button> -->
                 </div>
             </div>
             

@@ -41,7 +41,8 @@
 
         private function fillParams()
         {
-            $this->params = json_decode(file_get_contents('php://input'), true);
+            $params = json_decode(file_get_contents('php://input'), true);
+            $this->params = is_null($params) ? [] : $params;
         }
 
         protected function getParam($param, $default = null)

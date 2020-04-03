@@ -27,7 +27,7 @@ window.emuWAN = {
                 // Get all simulations
                 var promises = [];
                 emuWAN.interfaces.forEach(function(interface, index){
-                    promises.push($.get(emuWAN_URL.simulation() + interface.id + '/', function(response) {
+                    promises.push($.get(emuWAN_URL.simulation(interface.id), function(response) {
                         response = JSON.parse(response);
                         if (!response.success) {
                             reject("Something went wrong");
@@ -113,6 +113,13 @@ emuWAN_Interfaces = {
             emuWAN_Interfaces.addCardEvents(interface.id);
         });
     },
+    render: function(interfaceId) {
+        var interface = emuWAN.interfaces.find(interface => interface.id === interfaceId);
+        var card = $(Mustache.render(emuWAN_Template.templates.interfacecard, interface));
+        $('[data-interfaceId="'+interfaceId+'"]').replaceWith(card);
+        emuWAN_Interfaces.addCardEvents(interface.id);
+        emuWAN_Modal.selector.modal('hide');
+    },
     addCardEvents: function(interfaceId) {
         var button = $('[data-interfaceId="'+interfaceId+'"]').find('#edit');
         button.on('click', (e) => {
@@ -127,7 +134,7 @@ emuWAN_Interfaces = {
             title: "Edit interface " + interface.id,
             interface: interface,
         }
-        var modal = emuWAN_Modal.renderModal(params);
+        var modal = emuWAN_Modal.render(params);
         modal.find('[data-save="modal"]').on('click', function(e){
             var array = emuWAN_Modal.selector.find('[data-form="modal"]').serializeArray();
             emuWAN_Modal.startLoading();
@@ -135,24 +142,38 @@ emuWAN_Interfaces = {
             array.forEach((field) => {
                 object[field.name] = field.value;
             });
-            emuWAN_Interfaces.updateInterface(object);
+            emuWAN_Interfaces.updateInterface(interface.id, object);
         });
     },
-    updateInterface: function(params) {
-        // Send post and repaint
+    updateInterface: function(interfaceId, params) {
+        $.post(emuWAN_URL.simulation(interfaceId), JSON.stringify(params), function(response) {
+            if (!response.success) {
+                // TODO petar
+            }
+        }, "json").then(function(){
+            $.get(emuWAN_URL.simulation(interfaceId), function(response){
+                response = JSON.parse(response);
+                if (!response.success) {
+                    // TODO petar
+                }
+                var interface = emuWAN.interfaces.find(interface => interface.id === interfaceId);
+                interface.simulation = response.response;
+                emuWAN_Interfaces.render(interface.id);
+            })
+        });
     }
 }
 
 emuWAN_Modal = {
     selector: $('#emuWAN-modal'),
-    renderModal: function(params) {
+    render: function(params) {
         var rendered = Mustache.render(emuWAN_Template.templates.modal, params);
         emuWAN_Modal.selector.find('#emuWAN-modal-content').html(rendered);
         emuWAN_Modal.selector.modal();
-        emuWAN_Modal.selector.on('hidden.bs.modal', () => emuWAN_Modal.disposeModal());
+        emuWAN_Modal.selector.on('hidden.bs.modal', () => emuWAN_Modal.dispose());
         return emuWAN_Modal.selector;
     },
-    disposeModal: function() {
+    dispose: function() {
         emuWAN_Modal.selector.find('#emuWAN-modal-content').html('');
         emuWAN_Modal.selector.modal('dispose');
         emuWAN.log('Modal disposed');
