@@ -121,7 +121,7 @@ emuWAN_Interfaces = {
         emuWAN_Modal.selector.modal('hide');
     },
     addCardEvents: function(interfaceId) {
-        var button = $('[data-interfaceId="'+interfaceId+'"]').find('#edit');
+        var button = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="edit-simulation"]');
         button.on('click', (e) => {
             var id = $(e.target).attr('data-interfaceId');
             var interface = emuWAN.interfaces.find(interface => interface.id === id);

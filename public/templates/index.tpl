@@ -10,7 +10,7 @@
 
         <script src="/vendor/jQuery/jquery-3.4.1.min.js"></script>
         <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="/vendor/mustache/mustache.min.js"></script>
+        <script src="/vendor/mustache/mustache-4.0.1.min.js"></script>
     </head>
     <body>
         <div class="container-fluid" style="margin-top: 20px" id="main-panel">

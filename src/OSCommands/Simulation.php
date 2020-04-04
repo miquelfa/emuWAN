@@ -41,7 +41,7 @@
 
         private function getSimulation()
         {
-            $status = !is_null($this->delay) && !is_null($this->loss) && !is_null($this->reorder);
+            $status = !is_null($this->delay) || !is_null($this->loss) || !is_null($this->reorder);
             return [
                 'id' => $this->interface,
                 'status' => $status,
@@ -92,6 +92,8 @@
             }
             if (!is_null($this->reorder) && !is_null($this->delay)) {
                 $command .= sprintf(" reorder %s%%", $this->reorder);
+            } elseif (!is_null($this->reorder) && is_null($this->delay)) {
+                $command .= sprintf(" delay 10ms reorder %s%%", $this->reorder);
             }
             if (!is_null($this->loss)) {
                 $command .= sprintf(" loss %s%%", $this->loss);

@@ -15,6 +15,11 @@
 
             if (is_null($this->interface)) {
                 $response = $this->getAllInterfaces();
+                if ($response === false) {
+                    $app->getResponse()->setSuccess(false);
+                    $app->getResponse()->addError(['interfaces' => 'No interfaces found']);
+                    return;
+                }
                 $app->getResponse()->setSuccess(true);
                 $app->getResponse()->set($response);
                 return true;
@@ -33,7 +38,13 @@
         {
             $response = [];
 
-            foreach (\emuWAN\OSCommands\NetworkInterface::getDeviceInterfaceList() as $interface) {
+            try {
+                $interfaces = \emuWAN\OSCommands\NetworkInterface::getDeviceInterfaceList();
+            } catch (\Exception $e) {
+                return false;
+            }
+
+            foreach ($interfaces as $interface) {
                 if ($interface == 'lo') continue;
                 $response[] = \emuWAN\OSCommands\NetworkInterface::getInterfaceDetails($interface);
             }
