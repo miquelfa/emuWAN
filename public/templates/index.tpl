@@ -50,5 +50,6 @@
         </div>
     </body>
 
+    <script src="/js/emuWAN_entities.js"></script>
     <script src="/js/emuWAN.js"></script>
 </html>

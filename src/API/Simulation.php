@@ -56,14 +56,36 @@
             }
 
             $res = \emuWAN\OSCommands\Simulation::setSimulation($this->interface, $params);
+            if (!$res) {
+                $app->getResponse()->setSuccess(FALSE);
+                return;
+            }
+            $result = \emuWAN\OSCommands\Simulation::get($this->interface);
+            if (!$result) {
+                $app->getResponse()->setSuccess(FALSE);
+                return;
+            }
+
             $this->app->getResponse()->setSuccess($res);
+            $this->app->getResponse()->set($result);
         }
 
         public function post_reset()
         {
             $res = \emuWAN\OSCommands\Simulation::reset($this->interface);
+            if (!$res) {
+                $app->getResponse()->setSuccess(FALSE);
+                return;
+            }
+
+            $result = \emuWAN\OSCommands\Simulation::get($this->interface);
+            if (!$result) {
+                $app->getResponse()->setSuccess(FALSE);
+                return;
+            }
 
             $this->app->getResponse()->setSuccess($res);
+            $this->app->getResponse()->set($result);
         }
     }
 ?>

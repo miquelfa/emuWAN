@@ -33,7 +33,7 @@
                 <div class="col-sm-4 text-right">
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                         <button data-action="edit-simulation" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-primary float-right">Edit</button>
-                        <!--<button data-action="stop-simulation" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-danger float-right">Stop</button>-->
+                        <button data-action="stop-simulation" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-danger float-right">Stop</button>
                     </div>
                 </div>
             </div>
