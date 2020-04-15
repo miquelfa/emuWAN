@@ -34,24 +34,18 @@
             $params['loss'] = $this->getParam('loss');
             $params['reorder'] = $this->getParam('reorder');
 
-            $fail = false;
             if (strlen($params['delay']) && (!is_numeric($params['delay']) || $params['delay'] < 1)) {
-                $this->app->getResponse()->setSuccess(false);
-                $this->app->getResponse()->addError(['delay' => 'Invalid delay value']);
-                $fail = true;
+                $this->app->getResponse()->addError('delay', 'Invalid delay value');
             }
             if (strlen($params['loss']) && (!is_numeric($params['loss']) || $params['loss'] < 0.5 || $params['loss'] > 100)) {
-                $this->app->getResponse()->setSuccess(false);
-                $this->app->getResponse()->addError(['loss' => 'Invalid loss value']);
-                $fail = true;
+                $this->app->getResponse()->addError('loss', 'Invalid loss value');
             }
             if (strlen($params['reorder']) && (!is_numeric($params['reorder']) || $params['reorder'] < 0.5 || $params['reorder'] > 100)) {
-                $this->app->getResponse()->setSuccess(false);
-                $this->app->getResponse()->addError(['reorder' => 'Invalid reorder value']);
-                $fail = true;
+                $this->app->getResponse()->addError('reorder', 'Invalid reorder value');
             }
 
-            if ($fail) {
+            if ($this->app->getResponse()->hasErrors()) {
+                $this->app->getResponse()->setSuccess(false);
                 $this->app->getResponse()->send();
             }
 

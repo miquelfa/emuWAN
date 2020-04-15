@@ -113,11 +113,17 @@ emuWAN_Interfaces = {
         emuWAN_Interfaces.addCardEvents(interface.id);
     },
     addCardEvents: function(interfaceId) {
-        var editButton = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="edit-simulation"]');
-        editButton.on('click', (e) => {
+        var editSimulationButton = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="edit-simulation"]');
+        editSimulationButton.on('click', (e) => {
             var id = $(e.target).attr('data-interfaceId');
             var interface = emuWAN.interfaces.find(interface => interface.id === interfaceId);
-            emuWAN_Interfaces.formEdit(interface);
+            emuWAN_Interfaces.formEditSimulation(interface);
+        });
+        var editInterfaceButton = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="edit-interface"]');
+        editInterfaceButton.on('click', (e) => {
+            var id = $(e.target).attr('data-interfaceId');
+            var interface = emuWAN.interfaces.find(interface => interface.id === interfaceId);
+            emuWAN_Interfaces.formEditInterface(interface);
         });
         var stopButton = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="stop-simulation"]');
         stopButton.on('click', (e) => {
@@ -125,10 +131,10 @@ emuWAN_Interfaces = {
             interface.simulation.reset();
         });
     },
-    formEdit: function(interface) {
+    formEditSimulation: function(interface) {
         var params = {
-            editinterface: true,
-            title: "Edit interface " + interface.id,
+            editsimulation: true,
+            title: "Edit simulation " + interface.id,
             interface: interface,
         }
         
@@ -139,6 +145,27 @@ emuWAN_Interfaces = {
             interface.simulation.edit(json).then(() => emuWAN_Modal.hide());
         });
     },
+    formEditInterface: function(interface) {
+        var params = {
+            editinterface: true,
+            title: "Edit interface " + interface.id,
+            interface: interface,
+        }
+        
+        var modal = emuWAN_Modal.render(params);
+        modal.find('input#DHCP').on('change', function(e){
+            if($(e.target).prop("checked")) {
+                modal.find('input#CIDR').prop("disabled", true);
+            } else {
+                modal.find('input#CIDR').prop("disabled", false);
+            }
+        });
+        modal.find('[data-save="modal"]').on('click', function(e){
+            var json = emuWAN_Tools.getFormJSON(emuWAN_Modal.selector.find('[data-form="modal"]'));
+            emuWAN_Modal.startLoading();
+            interface.edit(json).then(() => emuWAN_Modal.hide());
+        });
+    }
 }
 
 emuWAN_Modal = {

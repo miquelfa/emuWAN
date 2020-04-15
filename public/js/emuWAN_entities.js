@@ -5,12 +5,13 @@ class NetworkInterface {
         this.set(json, false);
     }
 
-    set(json, triggerChangeEvent = true) {
+    set (json, triggerChangeEvent = true) {
         this.id = json.id;
         this.status = json.status;
         this.mtu = json.mtu;
         this.MAC = json.MAC;
         this.speed = json.speed;
+        this.IP4 = json.IP4;
 
         if (triggerChangeEvent) {
             emuWAN.log('NetworkInterface trigger change: ' + this.id);
@@ -28,6 +29,28 @@ class NetworkInterface {
             _self.simulation = new Simulation(response.response);
             $(_self.simulation).bind('change', () => $(_self).trigger('change'));
             emuWAN.log('Simulation loaded: ' + _self.id);
+        });
+    }
+
+    edit (params) {
+        var _self = this;
+
+        params.CIDR = ("CIDR" in params) ? params.CIDR : "";
+        params.DHCP = ("DHCP" in params);
+
+        return $.post({
+            url: NetworkInterface.API + '/' + _self.id + '/',
+            data: JSON.stringify(params),
+            dataType: "json",
+            success: function(response) {
+                if (!response.success) {
+                    // TODO: handle error
+                }
+                _self.set(response.response);
+            },
+            error: function(){
+                // TODO: handle error
+            }
         });
     }
 }
@@ -57,7 +80,7 @@ class Simulation {
 
         return $.post({
             url: Simulation.API + '/' + _self.id + '/',
-            data: JSON.stringify(params),
+            data: JSON.stringify(params),   
             dataType: "json",
             success: function(response) {
                 if (!response.success) {

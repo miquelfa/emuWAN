@@ -9,6 +9,70 @@
 
     class NetworkInterface
     {
+        private $interface = NULL;
+
+        function __construct($interface)
+        {
+            $this->setInterface($interface);
+        }
+
+        private function setInterface($interface)
+        {
+            $this->interface = $interface;
+        }
+
+        private function _down()
+        {
+            try {
+                $command = sprintf('sudo ip link set dev %s down', $this->interface);
+                if (strlen(shell_exec($command))) {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
+            return true;
+        }
+
+        private function _up()
+        {
+            try {
+                $command = sprintf('sudo ip link set dev %s up', $this->interface);
+                if (strlen(shell_exec($command))) {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
+            return true;
+        }
+
+        private function _flushAddresses()
+        {
+            try {
+                $command = sprintf('sudo ip addr flush dev %s', $this->interface);
+                if (strlen(shell_exec($command))) {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
+            return true;
+        }
+
+        private function _setAddress($address)
+        {
+            try {
+                $command = sprintf('sudo ip addr add %s dev %s brd +', $address, $this->interface);
+                if (strlen(shell_exec($command))) {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
+            return true;
+        }
+
         /**
          * Retrieves a list of present interfaces
          * @return      array   The list of interfaces with its detailed information.
@@ -66,10 +130,12 @@
             if (preg_match('/brd\ (([0-9]{1,3}\.){3}([0-9]{1,3}){1})/', $out, $broadcast)) {
                 $details['IP4']['broadcast'] = $broadcast[1];
             }
-            if (preg_match('/dynamic/', $out)) {
-                $details['IP4']['dynamic'] = TRUE;
-            } else {
-                $details['IP4']['dynamic'] = FALSE;
+            if (!is_null($details['IP4']['CIDR'])) {
+                if (preg_match('/inet ' . preg_quote($details['IP4']['CIDR'], "/") . ' .+ dynamic/', $out)) {
+                    $details['IP4']['dynamic'] = true;
+                } else {
+                    $details['IP4']['dynamic'] = false;
+                }
             }
             $out = shell_exec("sudo ethtool " . $interface);
             if (preg_match('/Speed\:\ ([0-9]*)/', $out, $speed)) {
@@ -77,6 +143,56 @@
             }
 
             return $details;
+        }
+
+        /**
+         * Sets the IP of a specific interface
+         * @param   string $interface   The target interface name
+         * @param   array[mixed]        Options
+         * @return  bool                Wether everything worked or not.
+         */
+        public static function setParams($interface, $params) 
+        {
+            $networkInterface = new self($interface);
+
+            if (\emuWAN\Tools::isValidCIDR($params['CIDR']) || $params['CIDR'] === false) {
+                if (!$networkInterface->_flushAddresses()) {
+                    return false;
+                }
+            }
+
+            if (\emuWAN\Tools::isValidCIDR($params['CIDR'])) {
+                if (!$networkInterface->_setAddress($params['CIDR'])) {
+                    return false;
+                }
+            }
+
+            if ($params['DHCP']) {
+                if (!$networkInterface->_down() || !$networkInterface->_up()) {
+                    return false;
+                }
+                sleep(DHCP_DELAY); // To ensure DHCP request is fullfiled
+            }
+
+            return true;
+        }
+
+        /**
+         * Changes the status of the target interface
+         * @param   string $interface   The target interface name
+         * @param   string $status      The desired status
+         * @return  bool                Whether success or not
+         */
+        public static function interfaceStatus($interface, $status)
+        {
+            $networkInterface = new self($interface);
+            if ($status == "up") {
+                return $networkInterface->_up();
+            }
+            if ($status == "down") {
+                return $networkInterface->_down();
+            }
+            return false;
         }
     }
 ?>

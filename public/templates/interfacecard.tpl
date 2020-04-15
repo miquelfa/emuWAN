@@ -13,6 +13,17 @@
                         {{/status}}
                     </h2>
                 </div>
+                <div class="col-sm-4 text-right">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <button data-action="edit-interface" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-primary float-right">Edit</button>
+                        {{#status}}
+                        <button data-action="stop-interface" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-danger float-right">DOWN</button>
+                        {{/status}}
+                        {{^status}}
+                        <button data-action="start-interface" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-success float-right">UP</button>
+                        {{/status}}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -33,7 +44,12 @@
                 <div class="col-sm-4 text-right">
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                         <button data-action="edit-simulation" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-primary float-right">Edit</button>
+                        {{#simulation.status}}
                         <button data-action="stop-simulation" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-danger float-right">Stop</button>
+                        {{/simulation.status}}
+                        {{^simulation.status}}
+                        <button data-action="stop-simulation" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-danger float-right" disabled>Stop</button>
+                        {{/simulation.status}}
                     </div>
                 </div>
             </div>

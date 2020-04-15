@@ -8,7 +8,7 @@
 
     // App debug mode
     define("DEBUG", false);
-    
-    // Daemon results timeout
-    define("DAEMON_TIMEOUT", 1);
+
+    // DHCP response time delay (in seconds)
+    define("DHCP_DELAY", 5);
 ?>

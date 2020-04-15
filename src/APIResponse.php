@@ -34,9 +34,14 @@
             $this->response = $array;
         }
 
-        public function addError($array)
+        public function addError($key, $error)
         {
-            $this->errors[] = $array;
+            $this->errors[$key] = $error;
+        }
+
+        public function hasErrors()
+        {
+            return count($this->errors);
         }
 
         public function send()

@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="modal-body">
-    {{#editinterface}}
+    {{#editsimulation}}
     <form data-form="modal">
         <div class="form-row">
             <div class="form-group col-sm-4">
@@ -34,6 +34,24 @@
                         <span class="input-group-text">%</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </form>
+    {{/editsimulation}}
+    {{#editinterface}}
+    <form data-form="modal">
+        <div class="form-row justify-content-around">
+            <div class="form-group col-sm-5">
+                <label for="CIDR">Address</label>
+                <input id="CIDR" name="CIDR" type="text" class="form-control" {{#interface.IP4.CIDR}}value="{{interface.IP4.CIDR}}"{{/interface.IP4.CIDR}} {{#interface.IP4.dynamic}}disabled{{/interface.IP4.dynamic}}>
+                <small id="CIDRhelp" class="form-text text-muted">CIDR format: address/mask</small>
+            </div>
+            <div class="form-group col-sm-5">
+                <label for="DHCP">DHCP</label><br/>
+                <label class="switch">
+                    <input id="DHCP" name="DHCP" type="checkbox" {{#interface.IP4.dynamic}}checked{{/interface.IP4.dynamic}}>
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
     </form>

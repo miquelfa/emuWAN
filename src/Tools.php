@@ -25,5 +25,26 @@
             }
             return FALSE;
         }
+
+        public static function isValidCIDR($cidr)
+        {
+            $parts = explode('/', $cidr);
+            if(count($parts) != 2) {
+                return false;
+            }
+
+            $ip = $parts[0];
+            $netmask = intval($parts[1]);
+
+            if($netmask < 0) {
+                return false;
+            }
+
+            if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                return $netmask <= 32;
+            }
+
+            return false;
+        }
     }
 ?>
