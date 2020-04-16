@@ -2,7 +2,7 @@
     <div class="card shadow box-interface">
         <div class="card-header">
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-9">
                     <h2>
                         <b>{{id}}</b>&nbsp;
                         {{#status}}
@@ -13,14 +13,14 @@
                         {{/status}}
                     </h2>
                 </div>
-                <div class="col-sm-4 text-right">
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <button data-action="edit-interface" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-primary float-right">Edit</button>
+                <div class="col-sm-3 text-right">
+                    <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+                        <button data-action="edit-interface" title="Edit interface" type="button" class="btn btn-sm btn-primary float-right"><i class="fas fa-edit"></i></button>
                         {{#status}}
-                        <button data-action="stop-interface" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-danger float-right">DOWN</button>
+                        <button data-action="toggle-interface" title="Set nterface DOWN" data-status="down" type="button" class="btn btn-sm btn-danger float-right"><i class="fas fa-unlink"></i></button>
                         {{/status}}
                         {{^status}}
-                        <button data-action="start-interface" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-success float-right">UP</button>
+                        <button data-action="toggle-interface" title="Set nterface UP" data-status="up" type="button" class="btn btn-sm btn-success float-right"><i class="fas fa-link"></i></button>
                         {{/status}}
                     </div>
                 </div>
@@ -38,17 +38,17 @@
             {{/IP4.status}}
             <hr>
             <div class="row">
-                <div class="col-sm-8">
+                <div class="col-sm-9">
                     <h2>Simulation</h2>
                 </div>
-                <div class="col-sm-4 text-right">
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <button data-action="edit-simulation" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-primary float-right">Edit</button>
+                <div class="col-sm-3 text-right">
+                    <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+                        <button data-action="edit-simulation" title="Edit simulation" type="button" class="btn btn-sm btn-primary float-right"><i class="fas fa-edit"></i></button>
                         {{#simulation.status}}
-                        <button data-action="stop-simulation" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-danger float-right">Stop</button>
+                        <button data-action="stop-simulation" title="Stop simulation" type="button" class="btn btn-sm btn-danger float-right"><i class="fas fa-stop"></i></button>
                         {{/simulation.status}}
                         {{^simulation.status}}
-                        <button data-action="stop-simulation" data-interfaceId="{{id}}" type="button" class="btn btn-sm btn-danger float-right" disabled>Stop</button>
+                        <button data-action="stop-simulation" title="Stop simulation" type="button" class="btn btn-sm btn-danger float-right" disabled><i class="fas fa-stop"></i></button>
                         {{/simulation.status}}
                     </div>
                 </div>

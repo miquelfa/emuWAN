@@ -21,7 +21,7 @@ class NetworkInterface {
 
     getSimulation() {
         var _self = this;
-        return $.get(Simulation.API + '/' + _self.id + '/', function(response) {
+        return $.get(Simulation.API + _self.id + '/', function(response) {
             response = JSON.parse(response);
             if (!response.success) {
                 reject("Something went wrong");
@@ -38,20 +38,23 @@ class NetworkInterface {
         params.CIDR = ("CIDR" in params) ? params.CIDR : "";
         params.DHCP = ("DHCP" in params);
 
-        return $.post({
-            url: NetworkInterface.API + '/' + _self.id + '/',
-            data: JSON.stringify(params),
-            dataType: "json",
-            success: function(response) {
-                if (!response.success) {
-                    // TODO: handle error
-                }
+        return AjaxWrapper.post(NetworkInterface.API + _self.id + '/', params)
+            .then((response) => {
                 _self.set(response.response);
-            },
-            error: function(){
-                // TODO: handle error
-            }
-        });
+                emuWAN.log('Interface edited: ' + _self.id);
+            });
+    }
+
+    setStatus (status) {
+        var _self = this;
+
+        var params = {"status": status};
+
+        return AjaxWrapper.post(NetworkInterface.API + _self.id + '/status/', params)
+            .then((response) => {
+                _self.set(response.response);
+                emuWAN.log('Interface status changed: ' + _self.id);
+            });
     }
 }
 
@@ -78,37 +81,51 @@ class Simulation {
     edit (params) {
         var _self = this;
 
-        return $.post({
-            url: Simulation.API + '/' + _self.id + '/',
-            data: JSON.stringify(params),   
-            dataType: "json",
-            success: function(response) {
-                if (!response.success) {
-                    // TODO: handle error
-                }
+        return AjaxWrapper.post(Simulation.API + _self.id + '/', params)
+            .then((response) => {
                 _self.set(response.response);
-            },
-            error: function(){
-
-            }
-        });
+                emuWAN.log('Simulation edited: ' + _self.id);
+            });
     }
 
     reset () {
         var _self = this;
 
-        return $.post({
-            url: Simulation.API + '/' + _self.id + '/reset/',
-            dataType: "json",
-            success: function(response) {
-                if (!response.success) {
-                    // TODO: handle error
-                }
+        return AjaxWrapper.post(Simulation.API + _self.id + '/reset/')
+            .then((response) => {
                 _self.set(response.response);
-            },
-            error: function(){
+                emuWAN.log('Simulation stopped: ' + _self.id);
+            });
+    }
+}
 
-            }
+class AjaxWrapper {
+    static request (method, url, params = undefined) {
+        return new Promise((resolve, reject) => {
+            var data = (typeof params === 'object') ? JSON.stringify(params) : params;
+            $.ajax({
+                method: method,
+                url: url,
+                dataType: "json",
+                data: data,
+                success: (response) => {
+                    if (response.success) {
+                        resolve(response);
+                    }
+                    reject(response);
+                },
+                error: () => {
+                    reject(false);
+                }
+            });
         });
+    }
+
+    static get (url, params = undefined) {
+        return AjaxWrapper.request("GET", url, params);
+    }
+
+    static post (url, params = undefined) {
+        return AjaxWrapper.request("POST", url, params);
     }
 }

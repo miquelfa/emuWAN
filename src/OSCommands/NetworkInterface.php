@@ -187,7 +187,10 @@
         {
             $networkInterface = new self($interface);
             if ($status == "up") {
-                return $networkInterface->_up();
+                if ($res = $networkInterface->_up()) {
+                    sleep(DHCP_DELAY);
+                }
+                return $res;
             }
             if ($status == "down") {
                 return $networkInterface->_down();

@@ -36,7 +36,7 @@
 
         public function addError($key, $error)
         {
-            $this->errors[$key] = $error;
+            $this->errors[] = ['key' => $key, 'error' => $error];
         }
 
         public function hasErrors()

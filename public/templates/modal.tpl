@@ -15,6 +15,7 @@
                     <div class="input-group-append">
                         <span class="input-group-text">ms</span>
                     </div>
+                    <div data-inputname="delay" class="invalid-feedback"></div>
                 </div>
             </div>
             <div class="form-group col-sm-4">
@@ -24,6 +25,7 @@
                     <div class="input-group-append">
                         <span class="input-group-text">%</span>
                     </div>
+                    <div data-inputname="reorder" class="invalid-feedback"></div>
                 </div>
             </div>
             <div class="form-group col-sm-4">
@@ -33,6 +35,7 @@
                     <div class="input-group-append">
                         <span class="input-group-text">%</span>
                     </div>
+                     
                 </div>
             </div>
         </div>
@@ -44,6 +47,7 @@
             <div class="form-group col-sm-5">
                 <label for="CIDR">Address</label>
                 <input id="CIDR" name="CIDR" type="text" class="form-control" {{#interface.IP4.CIDR}}value="{{interface.IP4.CIDR}}"{{/interface.IP4.CIDR}} {{#interface.IP4.dynamic}}disabled{{/interface.IP4.dynamic}}>
+                <div data-inputname="CIDR" class="invalid-feedback"></div>
                 <small id="CIDRhelp" class="form-text text-muted">CIDR format: address/mask</small>
             </div>
             <div class="form-group col-sm-5">
