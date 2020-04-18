@@ -18,9 +18,12 @@
 
         const METHOD_POST = 'POST';
         const METHOD_GET = 'GET';
+        const METHOD_PUT = 'PUT';
+        const METHOD_DELETE = 'DELETE';
         const ENDPOINTS = [
             'networkinterface' => 'NetworkInterface',
-            'simulation'       => 'Simulation'
+            'simulation'       => 'Simulation',
+            'bridge'           => 'Bridge'
         ];
 
         /**
@@ -102,7 +105,9 @@
         {
             return [
                 self::METHOD_POST,
-                self::METHOD_GET
+                self::METHOD_GET,
+                self::METHOD_PUT,
+                self::METHOD_DELETE
             ];
         }
     }

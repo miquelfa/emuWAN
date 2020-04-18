@@ -1,6 +1,6 @@
 <?php
     /**
-     * NetworkInterface managing relation to OS
+     * Simulation managing relation to OS
      *
      * @author     Miquel Ferrer Amer <miquel@miquelfa.com>
      * @link       http://miquelfa.com

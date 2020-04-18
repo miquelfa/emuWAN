@@ -35,11 +35,6 @@
             $this->response .= $response;
         }
 
-        private function sendResponse()
-        {
-            echo $this->response;
-        }
-
         public function send()
         {
             if ($this->type == self::TYPE_PLAIN) {
@@ -48,6 +43,19 @@
 
             $this->sendResponse();
             die;
+        }
+
+        public function send404()
+        {
+            if ($this->type == self::TYPE_PLAIN) {
+                http_response_code(404);
+                die;
+            }
+        }
+
+        private function sendResponse()
+        {
+            echo $this->response;
         }
     }
 ?>

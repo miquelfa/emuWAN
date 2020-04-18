@@ -5,8 +5,7 @@
     try{
         $app->execute();
     } catch (\Exception $e) {
-        $app->getResponse()->setSuccess(FALSE);
-        $app->getResponse()->add(['FatalError' => TRUE, 'Message' => $e->getMessage()]);
+        $app->getResponse()->send404();
     }
 
     $app->getResponse()->send();    

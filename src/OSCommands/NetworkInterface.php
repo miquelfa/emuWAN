@@ -107,6 +107,11 @@
                     'mask' => null,
                     'broadcast' => null,
                     'dynamic' => null
+                ],
+                'bridge' => [
+                    'status' => false,
+                    'isbridge' => false,
+                    'inbridge' => false
                 ]
             ];
 
@@ -140,6 +145,15 @@
             $out = shell_exec("sudo ethtool " . $interface);
             if (preg_match('/Speed\:\ ([0-9]*)/', $out, $speed)) {
                 $details['speed'] = $speed[1];
+            }
+            $out = shell_exec("brctl show");
+            if (preg_match(sprintf('/^%s/m', $interface), $out)) {
+                $details['bridge']['status'] = 'a';
+                $details['bridge']['isbridge'] = true;
+            }
+            if (preg_match(sprintf('/%s$/m', $interface), $out)) {
+                $details['bridge']['status'] = 'a';
+                $details['bridge']['inbridge'] = true;
             }
 
             return $details;
