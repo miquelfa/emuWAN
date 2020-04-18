@@ -12,6 +12,7 @@ class NetworkInterface {
         this.MAC = json.MAC;
         this.speed = json.speed;
         this.IP4 = json.IP4;
+        this.bridge = json.bridge;
 
         if (triggerChangeEvent) {
             emuWAN.log('NetworkInterface trigger change: ' + this.id);

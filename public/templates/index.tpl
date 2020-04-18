@@ -19,8 +19,16 @@
                 <div class="col-sm-6">
                     <h1>Interfaces</h1>
                 </div>
-                <div class="col-sm-2 my-auto">
-                    <!-- <button type="button" class="btn btn-primary float-right">Refresh</button> -->
+                <div class="col-sm-2 text-right">
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="dropdown-item" href="#">Add bridge</a>
+                            <a class="dropdown-item" href="#">Dropdown link</a>
+                        </div>
+                    </div>
                 </div>
             </div>
             

@@ -2,7 +2,7 @@
     <div class="card shadow box-interface">
         <div class="card-header">
             <div class="row">
-                <div class="col-sm-9">
+                <div class="col-sm-9 align-middle">
                     <h2>
                         <b>{{id}}</b>&nbsp;
                         {{#status}}
@@ -13,7 +13,11 @@
                         {{/status}}
                     </h2>
                 </div>
-                <div class="col-sm-3 text-right">
+                <div class="col-sm-3 text-right align-middle">
+                    {{#bridge.inbridge}}
+                    <button title="Bridged interface" type="button" class="btn btn-sm btn-secondary float-right" disabled>Bridged</button>
+                    {{/bridge.inbridge}}
+                    {{^bridge.inbridge}}
                     <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
                         <button data-action="edit-interface" title="Edit interface" type="button" class="btn btn-sm btn-primary float-right"><i class="fas fa-edit"></i></button>
                         {{#status}}
@@ -23,6 +27,7 @@
                         <button data-action="toggle-interface" title="Set nterface UP" data-status="up" type="button" class="btn btn-sm btn-success float-right"><i class="fas fa-link"></i></button>
                         {{/status}}
                     </div>
+                    {{/bridge.inbridge}}
                 </div>
             </div>
         </div>
@@ -36,6 +41,7 @@
             <span class="font-weight-bold">Broadcast: </span> {{IP4.broadcast}}<br/>
             <span class="font-weight-bold">DHCP: </span> <span class="dot dot-sm {{#IP4.dynamic}}dot-success{{/IP4.dynamic}}{{^IP4.dynamic}}dot-danger{{/IP4.dynamic}}"></span><br/>
             {{/IP4.status}}
+            {{^bridge.isbridge}}
             <hr>
             <div class="row">
                 <div class="col-sm-9">
@@ -63,6 +69,7 @@
                 No running simulation
                 {{/simulation.status}}
             </div>
+            {{/bridge.isbridge}}
         </div>
     </div>
 </div>
