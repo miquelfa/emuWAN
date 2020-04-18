@@ -100,6 +100,14 @@ class Simulation {
     }
 }
 
+class Bridge {
+    static API = '/api/bridge/';
+
+    static getAll () {
+        return AjaxWrapper.get(Bridge.API);
+    }
+}
+
 class AjaxWrapper {
     static request (method, url, params = undefined) {
         return new Promise((resolve, reject) => {

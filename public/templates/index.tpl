@@ -10,7 +10,7 @@
 
         <script src="/vendor/jQuery/jquery-3.4.1.min.js"></script>
         <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="/vendor/mustache/mustache-4.0.1.min.js"></script>
+        <script src="/vendor/handlebars/handlebars.min-v4.7.6.js"></script>
         <script defer src="/vendor/fontawesome/all.min.js"></script>
     </head>
     <body>
@@ -34,6 +34,16 @@
             
             <div class="row justify-content-center" id="interface-cards">
 
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div id="bridges-container">
+                        
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                </div>
             </div>
         </div>
 

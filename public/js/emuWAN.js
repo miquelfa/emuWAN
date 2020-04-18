@@ -1,9 +1,12 @@
 window.emuWAN = {
     debug: true,
     interfaces: [],
+    bridges: null,
+    templates: null,
     startApp: function() {
+        emuWAN.templates = new Templates_Module();
         $.when(
-            emuWAN_Template.loadEssentialTemplates(),
+            emuWAN.templates.loadEssential(),
             emuWAN.loadInitialData()
         ).then(function(){
             emuWAN.interfaces.forEach((interface) => {
@@ -12,6 +15,7 @@ window.emuWAN = {
             });
             emuWAN.log('Loading success');
             setTimeout(emuWAN.disableLoader, 50);
+            emuWAN.bridges = new Bridges_Module();
         }, function(){
             emuWAN.log('Loading fail');
             // TODO implement failure
@@ -76,45 +80,22 @@ emuWAN_Tools = {
     }
 }
 
-emuWAN_Template = {
-    templates: {
-        interfacecard: '/templates/interfacecard.tpl',
-        modal: '/templates/modal.tpl'
-    },
-    loadEssentialTemplates: function() {
-        var promise = new Promise(function(resolve, reject){
-            $.when(
-                Object.keys(emuWAN_Template.templates).forEach(function(key){
-                    fetch(emuWAN_Template.templates[key])
-                        .then((result) => result.text())
-                        .then((template) => {
-                            emuWAN_Template.templates[key] = template;
-                        });
-                })
-            ).then(function(){
-                resolve("Success!");
-            }, function(){
-                reject("Something went wrong");
-            });
-        });
-        return promise;
-    }
-}
-
 emuWAN_Interfaces = {
     render: function(interface) {
         var cardSelector = '[data-interfaceId="'+interface.id+'"]';
-        var card = Mustache.render(emuWAN_Template.templates.interfacecard, interface);
+        emuWAN.templates.getTemplate('interfacecard').then((template) => {
+            var card = template(interface);
 
-        var existingCard = $('#interface-cards').find(cardSelector);
-        if (existingCard.length) {
-            $(cardSelector).replaceWith(card);
-        } else {
-            $('#interface-cards').append(card);
-        }
+            var existingCard = $('#interface-cards').find(cardSelector);
+            if (existingCard.length) {
+                $(cardSelector).replaceWith(card);
+            } else {
+                $('#interface-cards').append(card);
+            }
 
-        $('[data-toggle="tooltip"]').tooltip();
-        emuWAN_Interfaces.addCardEvents(interface.id);
+            $('[data-toggle="tooltip"]').tooltip();
+            emuWAN_Interfaces.addCardEvents(interface.id);
+        });
     },
     addCardEvents: function(interfaceId) {
         var editInterfaceButton = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="edit-interface"]');
@@ -146,8 +127,8 @@ emuWAN_Interfaces = {
             interface: interface,
         }
         
-        var modal = emuWAN_Modal.render(params);
-        modal.find('[data-save="modal"]').on('click', function(e){
+        emuWAN_Modal.render(params);
+        emuWAN_Modal.selector.find('[data-save="modal"]').on('click', function(e){
             var json = emuWAN_Tools.getFormJSON(emuWAN_Modal.selector.find('[data-form="modal"]'));
             emuWAN_Modal.startLoading();
             interface.simulation.edit(json).then(() => emuWAN_Modal.hide(), (result) => {
@@ -165,15 +146,15 @@ emuWAN_Interfaces = {
             interface: interface,
         }
         
-        var modal = emuWAN_Modal.render(params);
-        modal.find('input#DHCP').on('change', function(e){
+        emuWAN_Modal.render(params);
+        emuWAN_Modal.selector.find('input#DHCP').on('change', function(e){
             if($(e.target).prop("checked")) {
                 modal.find('input#CIDR').prop("disabled", true);
             } else {
                 modal.find('input#CIDR').prop("disabled", false);
             }
         });
-        modal.find('[data-save="modal"]').on('click', function(e){
+        emuWAN_Modal.selector.find('[data-save="modal"]').on('click', function(e){
             var json = emuWAN_Tools.getFormJSON(emuWAN_Modal.selector.find('[data-form="modal"]'));
             emuWAN_Modal.startLoading();
             interface.edit(json).then(() => emuWAN_Modal.hide(), (result) => {
@@ -186,14 +167,89 @@ emuWAN_Interfaces = {
     }
 }
 
+class Templates_Module {
+    templates = [];
+    essential = ['interfacecard', 'modal'];
+    paths = {
+        interfacecard: '/templates/interfacecard.tpl',
+        modal: '/templates/modal.tpl',
+        bridges: '/templates/bridges.tpl'
+    }
+
+    loadEssential () {
+        var _self = this;
+        return new Promise(function(resolve, reject){
+            $.when(
+                _self.essential.forEach(function(name){
+                    _self.loadTemplate(name);
+                })
+            ).then(() => resolve('Success!'), () => reject('Failure'));
+        });
+    }
+
+    loadTemplate (name) {
+        var _self = this;
+        return new Promise((resolve) => {
+            fetch(_self.paths[name]).then((result) => 
+                result.text()
+            ).then((template) => {
+                _self.templates[name] = Handlebars.compile(template);
+                emuWAN.log('Template loaded: ' + name);
+                resolve(_self.templates[name]);
+            });
+        });
+    }
+
+    getTemplate (name) {
+        return new Promise((resolve) => {
+            if (name in this.templates) {
+                resolve(this.templates[name]);
+                return;
+            }
+            this.loadTemplate(name).then((template) => resolve(template));
+        });
+    }
+}
+
+class Bridges_Module {
+    bridges = [];
+
+    constructor () {
+        $(this).bind('render', (e) => this.render);
+        this.loadBridges();
+    }
+
+    setBridges (bridges) {
+        this.bridges = bridges;
+        $(this).trigger('render');
+    }
+
+    loadBridges () {
+        var _self = this;
+        Bridge.getAll().then(function(response){
+            _self.setBridges(response.response);
+        }, function(response) {
+            console.log(response);
+        });
+    }
+
+    render () {
+        emuWAN.templates.getTemplate('bridges').then((template) => {
+            var rendered = template(this.bridges);
+            $('#bridges-container').html(rendered);
+        });
+    }
+}
+
 emuWAN_Modal = {
     selector: $('#emuWAN-modal'),
     render: function(params) {
-        var rendered = Mustache.render(emuWAN_Template.templates.modal, params);
-        emuWAN_Modal.selector.find('#emuWAN-modal-content').html(rendered);
-        emuWAN_Modal.selector.modal();
-        emuWAN_Modal.selector.on('hidden.bs.modal', () => emuWAN_Modal.dispose());
-        return emuWAN_Modal.selector;
+        emuWAN.templates.getTemplate('modal').then((template) => {
+            var rendered = template(params);
+            emuWAN_Modal.selector.find('#emuWAN-modal-content').html(rendered);
+            emuWAN_Modal.selector.modal();
+            emuWAN_Modal.selector.on('hidden.bs.modal', () => emuWAN_Modal.dispose());
+        });
     },
     dispose: function() {
         emuWAN_Modal.selector.find('#emuWAN-modal-content').html('');
