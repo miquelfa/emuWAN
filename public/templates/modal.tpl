@@ -35,7 +35,7 @@
                     <div class="input-group-append">
                         <span class="input-group-text">%</span>
                     </div>
-                     
+                    <div data-inputname="loss" class="invalid-feedback"></div>
                 </div>
             </div>
         </div>

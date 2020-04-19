@@ -61,9 +61,9 @@
             </div>
             <div class="mt-1">
                 {{#simulation.status}}
-                {{#simulation.delay}}<span class="font-weight-bold">Delay: </span> {{simulation.delay}} ms<br/>{{/simulation.delay}}
-                {{#simulation.loss}}<span class="font-weight-bold">Packet loss: </span> {{simulation.loss}} %<br/>{{/simulation.loss}}
-                {{#simulation.reorder}}<span class="font-weight-bold">Packet reordering: </span> {{simulation.reorder}} %<br/>{{/simulation.reorder}}
+                {{#simulation.delay}}<span class="font-weight-bold">Delay: </span> {{this}} ms<br/>{{/simulation.delay}}
+                {{#simulation.loss}}<span class="font-weight-bold">Packet loss: </span> {{this}} %<br/>{{/simulation.loss}}
+                {{#simulation.reorder}}<span class="font-weight-bold">Packet reordering: </span> {{this}} %<br/>{{/simulation.reorder}}
                 {{/simulation.status}}
                 {{^simulation.status}}
                 No running simulation
