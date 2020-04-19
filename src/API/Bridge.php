@@ -28,13 +28,26 @@
             }
         }
 
+        // TODO: Is not validating if bridge already exists or interfaces exist.
         public function put()
         {
-            $id = $this->getParam('id');
-            $interfaces = $this->getParam('interfaces');
+            $name = $this->getParam('name');
+            $interfaces = $this->getParam('interfaces', []);
+
+            if (!strlen($name)) {
+                $this->app->getResponse()->addError('name', 'Name shall not be empty');
+            }
+            if (!count($interfaces) || count($interfaces) < 2) {
+                $this->app->getResponse()->addError('interfaces', 'The bridge needs at least two interfaces');
+            }
+
+            if ($this->app->getResponse()->hasErrors()) {
+                $this->app->getResponse()->setSuccess(false);
+                return;
+            }
 
             try {
-                $bridge = \emuWAN\OSCommands\Bridge::newBridge($id, $interfaces);
+                $bridge = \emuWAN\OSCommands\Bridge::newBridge($name, $interfaces);
 
                 $this->app->getResponse()->setSuccess(true);
                 $this->app->getResponse()->set($bridge);
