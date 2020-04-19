@@ -3,9 +3,10 @@
 
 
 # Install and check all required packages
-# Check ip -V
-# Check ethtool --version
-# Check dhclient -v
+# ip -V
+# ethtool --version
+# dhclient -v
+# brctl -V              // bridge utils
 
 # Add permissions to visudo
 #   Find binary of ethtool      |   Add line to file
@@ -24,3 +25,5 @@
 
 # Enable packet forwarding:
 # su -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+
+# Be sure ufw is disabled
