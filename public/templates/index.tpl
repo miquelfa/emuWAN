@@ -25,8 +25,8 @@
                             <i class="fas fa-cog"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                            <a class="dropdown-item" href="#">Add bridge</a>
-                            <a class="dropdown-item" href="#">Dropdown link</a>
+                            <a class="dropdown-item" data-action="add-bridge" title="Add new bridge interface" href="#">Add bridge</a>
+                            <!--<a class="dropdown-item" href="#">Dropdown link</a>-->
                         </div>
                     </div>
                 </div>

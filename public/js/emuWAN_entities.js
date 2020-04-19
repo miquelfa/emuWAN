@@ -103,8 +103,36 @@ class Simulation {
 class Bridge {
     static API = '/api/bridge/';
 
+    constructor (data) {
+        this.set(data, false);
+    }
+
+    set (data, triggerChangeEvent = true) {
+        this.id = data.id;
+        this.interfaces = data.interfaces;
+
+        if (triggerChangeEvent) {
+            emuWAN.log('Bridge trigger change: ' + this.id);
+            $(this).trigger('change');
+        }
+    }
+
     static getAll () {
-        return AjaxWrapper.get(Bridge.API);
+        return AjaxWrapper.get(Bridge.API)
+            .then((response) => {
+                var bridges = [];
+                response.response.forEach((bridge) => {
+                    bridges.push(new Bridge(bridge));
+                });
+                return bridges;
+            });
+    }
+
+    static create(data) {
+        return AjaxWrapper.put(Bridge.API, data)
+            .then((response) => {
+                return new Bridge(response.response);
+            });
     }
 }
 
@@ -136,5 +164,9 @@ class AjaxWrapper {
 
     static post (url, params = undefined) {
         return AjaxWrapper.request("POST", url, params);
+    }
+
+    static put (url, params = undefined) {
+        return AjaxWrapper.request("PUT", url, params);
     }
 }

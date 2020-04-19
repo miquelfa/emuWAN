@@ -1,10 +1,12 @@
 window.emuWAN = {
     debug: true,
     interfaces: [],
-    bridges: null,
+    bridge: null,
     templates: null,
+    modal: null,
     startApp: function() {
         emuWAN.templates = new Templates_Module();
+        emuWAN.modal = new Modal_Module();
         $.when(
             emuWAN.templates.loadEssential(),
             emuWAN.loadInitialData()
@@ -15,7 +17,8 @@ window.emuWAN = {
             });
             emuWAN.log('Loading success');
             setTimeout(emuWAN.disableLoader, 50);
-            emuWAN.bridges = new Bridges_Module();
+            emuWAN.bridge = new Bridges_Module();
+            $('[data-action="add-bridge"]').on('click', (e) => {emuWAN.bridge.formCreateBridge()});
         }, function(){
             emuWAN.log('Loading fail');
             // TODO implement failure
@@ -74,6 +77,12 @@ emuWAN_Tools = {
         var array = formSelector.serializeArray();
         var json = {};
         array.forEach((field) => {
+            var match = field.name.match(/([a-z]+)\[\]/);
+            if (match) {
+                (json[match[1]] = json[match[1]] || []).push(field.value);
+                return;
+            }
+
             json[field.name] = field.value;
         });
         return json;
@@ -227,9 +236,12 @@ class Bridges_Module {
     loadBridges () {
         var _self = this;
         Bridge.getAll().then(function(response){
-            _self.setBridges(response.response);
+            _self.setBridges(response);
         }, function(response) {
-            console.log(response);
+            if ("success" in response) {
+                return;
+            }
+            emuWAN.appFailure();
         });
     }
 
@@ -238,6 +250,99 @@ class Bridges_Module {
             var rendered = template(this.bridges);
             $('#bridges-container').html(rendered);
         });
+    }
+
+    formCreateBridge () {
+        var params = {
+            createbridge: true,
+            title: "Create new bridge",
+            interfaces: emuWAN.interfaces
+        }
+        emuWAN.modal.render(params);
+        $(emuWAN.modal).bind('save', (e, data) => {
+            this.actionCreateBridge(data);
+        });
+    }
+
+    actionCreateBridge (data) {
+        var _self = this;
+        Bridge.create(data).then((bridge) => {
+            _self.bridges.push(bridge);
+            $(_self).trigger('render');
+            emuWAN.modal.hide();
+        }, (response) => {
+            emuWAN.modal.processFormErrors(response.errors);
+        });
+    }
+}
+
+class Modal_Module {
+    selector = $('#emuWAN-modal');
+
+    render (params) {
+        var _self = this;
+        emuWAN.templates.getTemplate('modal').then((template) => {
+            var rendered = template(params);
+            _self.selector.find('#emuWAN-modal-content').html(rendered);
+            _self.selector.modal();
+            _self.selector.on('hidden.bs.modal', () => _self.dispose());
+            _self.selector.find('[data-save="modal"]').on('click', (e) => {_self.save()});
+        });
+    }
+
+    dispose () {
+        this.selector.find('#emuWAN-modal-content').html('');
+        this.selector.modal('dispose');
+        emuWAN.log('Modal disposed');
+    }
+
+    startLoading () {
+        this.selector.find('[data-save="modal"]').addClass('d-none');
+        this.selector.find('[data-loading="modal"]').removeClass('d-none');
+        this.selector.find('button, input').attr('disabled', true);
+    }
+
+    stopLoading () {
+        this.selector.find('[data-save="modal"]').removeClass('d-none');
+        this.selector.find('[data-loading="modal"]').addClass('d-none');
+        this.selector.find('button, input').attr('disabled', false);
+    }
+
+    save () {
+        this.clearFormErrors();
+        var json = emuWAN_Tools.getFormJSON(this.selector.find('[data-form="modal"]'));
+        $(this).trigger('save', json);
+        this.startLoading();
+    }
+
+    hide () {
+        this.stopLoading();
+        this.selector.modal('hide');
+    }
+
+    clearFormErrors () {
+        var form = this.selector.find('[data-form="modal"]');
+        form.find('.is-invalid').removeClass('is-invalid');
+        form.find('.invalid-feedback').html('');
+        this.selector.find('.alert').addClass('d-none').html('');
+    }
+
+    processFormErrors (errors) {
+        var _self = this;
+        var form = _self.selector.find('[data-form="modal"]');
+        errors.forEach((error) => {
+            var input = form.find('[name="'+error.key+'"]');
+            var errorfield = form.find('[data-inputname="'+error.key+'"]');
+            if (input.length && errorfield.length) {
+                errorfield.html(error.error);
+                input.addClass('is-invalid');
+            } else {
+                var alerts = _self.selector.find('.alert');
+                alerts.append(error.error + '<br/>');
+                alerts.removeClass('d-none');
+            }
+        });
+        _self.stopLoading();
     }
 }
 

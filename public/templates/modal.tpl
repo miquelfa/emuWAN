@@ -60,6 +60,31 @@
         </div>
     </form>
     {{/editinterface}}
+    {{#createbridge}}
+    <form data-form="modal">
+        <div class="form-row justify-content-around">
+            <div class="form-group col-sm-3">
+                <label for="name">Bridge name</label>
+                <input id="name" name="name" type="text" class="form-control">
+                <div data-inputname="name" class="invalid-feedback"></div>
+            </div>
+            <div class="form-group col-sm-9">
+                <div class="row justify-content-around">
+                    {{#each interfaces}}
+                    <div class="col-sm-2">
+                        <label for="interface[{{id}}]">{{id}}</label><br/>
+                        <label class="switch">
+                            <input id="interfaces[{{id}}]" name="interfaces[]" value="{{id}}" type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </form>
+    {{/createbridge}}
+    <div class="alert alert-danger d-none" role="alert"></div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
