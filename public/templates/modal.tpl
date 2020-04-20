@@ -84,11 +84,15 @@
         </div>
     </form>
     {{/createbridge}}
+    {{#deletebridge}}
+    <p>Are you sure you want to delete this bridge interface?</p>
+    {{/deletebridge}}
     <div class="alert alert-danger d-none" role="alert"></div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary" data-save="modal">Save changes</button>
+    {{#save}}<button type="button" class="btn btn-primary" data-save="modal" data-continue="modal">Save changes</button>{{/save}}
+    {{#accept}}<button type="button" class="btn btn-primary" data-accept="modal" data-continue="modal">Accept</button>{{/accept}}
     <button type="button" class="btn btn-primary d-none" data-loading="modal">
         <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
         Loading...

@@ -117,6 +117,10 @@ class Bridge {
         }
     }
 
+    delete() {
+        return AjaxWrapper.delete(Bridge.API  + this.id + '/');
+    }
+
     static getAll () {
         return AjaxWrapper.get(Bridge.API)
             .then((response) => {
@@ -168,5 +172,9 @@ class AjaxWrapper {
 
     static put (url, params = undefined) {
         return AjaxWrapper.request("PUT", url, params);
+    }
+
+    static delete (url, params = undefined) {
+        return AjaxWrapper.request("DELETE", url, params);
     }
 }

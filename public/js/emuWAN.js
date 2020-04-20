@@ -88,9 +88,9 @@ emuWAN_Tools = {
 }
 
 emuWAN_Interfaces = {
-    render: function(interface) {
+    render: async function(interface) {
         var cardSelector = '[data-interfaceId="'+interface.id+'"]';
-        var template = emuWAN.templates.getTemplate('interfacecard');
+        var template = await emuWAN.templates.getTemplate('interfacecard');
         var card = template(interface);
 
         var existingCard = $('#interface-cards').find(cardSelector);
@@ -131,6 +131,7 @@ emuWAN_Interfaces = {
             editsimulation: true,
             title: "Edit simulation " + interface.id,
             interface: interface,
+            save: true
         }
         
         emuWAN.modal.render(params);
@@ -148,6 +149,7 @@ emuWAN_Interfaces = {
             editinterface: true,
             title: "Edit interface " + interface.id,
             interface: interface,
+            save: true
         }
         
         emuWAN.modal.render(params);
@@ -171,7 +173,7 @@ emuWAN_Interfaces = {
 
 class Templates_Module {
     templates = [];
-    essential = ['interfacecard', 'modal', 'bridges'];
+    essential = ['interfacecard', 'modal'];
     paths = {
         interfacecard: '/templates/interfacecard.tpl',
         modal: '/templates/modal.tpl',
@@ -203,27 +205,22 @@ class Templates_Module {
     }
 
     getTemplate (name) {
-        if (name in this.templates) {
-            return this.templates[name];
-        }
-        emuWAN.appFailure();
-        /*
-        return new Promise((resolve) => {
+        return new Promise(async (resolve) => {
             if (name in this.templates) {
                 resolve(this.templates[name]);
                 return;
             }
-            this.loadTemplate(name).then((template) => resolve(template));
+            var template = await this.loadTemplate(name);
+            resolve(template);
         });
-        */
     }
 }
 
 class Bridges_Module {
     bridges = [];
+    selector = $('#bridges-container');
 
     constructor () {
-        $(this).bind('render', (e) => this.render);
         this.loadBridges();
     }
 
@@ -244,22 +241,27 @@ class Bridges_Module {
         });
     }
 
-    render () {
-        var template = emuWAN.templates.getTemplate('bridges')
-        var rendered = template(this.bridges);
-        $('#bridges-container').html(rendered);
+    async render () {
+        var _self = this;
+        var template = await emuWAN.templates.getTemplate('bridges')
+        var rendered = template({bridges: _self.bridges});
+        _self.selector.html(rendered);
+        _self.selector.find('[data-action="delete-bridge"]').on('click', (e) => {
+            var id = $(e.currentTarget).data('bridgeid');
+            _self.confirmDeleteBridge(id);
+        });
     }
 
     formCreateBridge () {
+        var _self = this;
         var params = {
             createbridge: true,
             title: "Create new bridge",
-            interfaces: emuWAN.interfaces
+            interfaces: emuWAN.interfaces,
+            save: true
         }
         emuWAN.modal.render(params);
-        $(emuWAN.modal).bind('save', (e, data) => {
-            this.actionCreateBridge(data);
-        });
+        $(emuWAN.modal).bind('save', (e, data) => {_self.actionCreateBridge(data)});
     }
 
     actionCreateBridge (data) {
@@ -272,21 +274,46 @@ class Bridges_Module {
             emuWAN.modal.processFormErrors(response.errors);
         });
     }
+
+    confirmDeleteBridge (id) {
+        var _self = this;
+        var params = {
+            deletebridge: true,
+            title: "Delete bridge " + id,
+            accept: true
+        }
+        emuWAN.modal.render(params);
+        $(emuWAN.modal).bind('accept', (e) => {_self.actionDeleteBridge(id)});
+    }
+
+    actionDeleteBridge (id) {
+        var _self = this;
+        var targetIndex = _self.bridges.findIndex(bridge => bridge.id === id);
+        if (targetIndex < 0) {
+            return;
+        }
+        _self.bridges[targetIndex].delete()
+            .then(() => {
+                _self.bridges.splice(targetIndex, 1);
+                $(_self).trigger('render');
+            }).finally(()=> {
+                emuWAN.modal.hide();
+            });
+    }
 }
 
 class Modal_Module {
     selector = $('#emuWAN-modal');
 
-    render (params) {
+    async render (params) {
         var _self = this;
-        var template = emuWAN.templates.getTemplate('modal');
+        var template = await emuWAN.templates.getTemplate('modal');
         var rendered = template(params);
         _self.selector.find('#emuWAN-modal-content').html(rendered);
         _self.selector.modal();
         _self.selector.on('hidden.bs.modal', () => _self.dispose());
-        _self.selector.find('[data-save="modal"]').on('click', (e) => {
-            _self.processSave();
-        });
+        _self.selector.find('[data-save="modal"]').on('click', (e) => {_self.processSave()});
+        _self.selector.find('[data-accept="modal"]').on('click', (e) => {_self.processAccept()});
     }
 
     dispose () {
@@ -297,13 +324,13 @@ class Modal_Module {
     }
 
     startLoading () {
-        this.selector.find('[data-save="modal"]').addClass('d-none');
+        this.selector.find('[data-continue="modal"]').addClass('d-none');
         this.selector.find('[data-loading="modal"]').removeClass('d-none');
         this.selector.find('button, input').attr('disabled', true);
     }
 
     stopLoading () {
-        this.selector.find('[data-save="modal"]').removeClass('d-none');
+        this.selector.find('[data-continue="modal"]').removeClass('d-none');
         this.selector.find('[data-loading="modal"]').addClass('d-none');
         this.selector.find('button, input').attr('disabled', false);
     }
@@ -312,6 +339,11 @@ class Modal_Module {
         this.clearFormErrors();
         var json = emuWAN_Tools.getFormJSON(this.selector.find('[data-form="modal"]'));
         $(this).trigger('save', json);
+        this.startLoading();
+    }
+
+    processAccept () {
+        $(this).trigger('accept');
         this.startLoading();
     }
 
