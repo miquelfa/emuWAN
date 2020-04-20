@@ -22,14 +22,10 @@
 
         protected function checkInterface()
         {
-            if (!is_null($this->interface)) {
-                return;
-            }
-
             if (!$this->isValidInterface()) {
                 $app = \emuWAN\API\API::getInstance();
                 $app->getResponse()->setSuccess(false);
-                $app->getResponse()->addError(['invalid_interface' => 'Invalid target interface']);
+                $app->getResponse()->addError('invalid_interface', 'Invalid target interface');
                 $app->getResponse()->send();
             }
         }
