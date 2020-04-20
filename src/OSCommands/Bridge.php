@@ -68,6 +68,8 @@
 
         private function delete()
         {
+            \emuWAN\OSCommands\NetworkInterface::interfaceStatus($this->bridge, \emuWAN\OSCommands\NetworkInterface::STATUS_DOWN);
+            
             $command = sprintf("sudo brctl delbr %s", $this->bridge);
             $out = shell_exec($command);
 

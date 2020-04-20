@@ -9,6 +9,9 @@
 
     class NetworkInterface
     {
+        const STATUS_UP = 'up';
+        const STATUS_DOWN = 'down';
+
         private $interface = NULL;
 
         function __construct($interface)
@@ -200,13 +203,13 @@
         public static function interfaceStatus($interface, $status)
         {
             $networkInterface = new self($interface);
-            if ($status == "up") {
+            if ($status == self::STATUS_UP) {
                 if ($res = $networkInterface->_up()) {
                     sleep(DHCP_DELAY);
                 }
                 return $res;
             }
-            if ($status == "down") {
+            if ($status == self::STATUS_DOWN) {
                 return $networkInterface->_down();
             }
             return false;

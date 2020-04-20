@@ -57,11 +57,6 @@
             }
         }
 
-        public function post()
-        {
-
-        }
-
         public function delete()
         {
             try {
