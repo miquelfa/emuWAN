@@ -7,52 +7,44 @@ window.emuWAN = {
     startApp: function() {
         emuWAN.templates = new Templates_Module();
         emuWAN.modal = new Modal_Module();
-        $.when(
+
+        var promises = [
             emuWAN.templates.loadEssential(),
             emuWAN.loadInitialData()
-        ).then(function(){
-            emuWAN.interfaces.forEach((interface) => {
-                emuWAN_Interfaces.render(interface);
-                $(interface).bind('change', (e) => emuWAN_Interfaces.render(e.target) );
-            });
-            emuWAN.log('Loading success');
-            setTimeout(emuWAN.disableLoader, 50);
+        ];
 
-            emuWAN.bridge = new Bridges_Module();
-            $('[data-action="add-bridge"]').on('click', (e) => {emuWAN.bridge.formCreateBridge()});
-        }, function(){
-            emuWAN.log('Loading fail');
-            emuWAN.appFailure();
-        });
+        Promise.all(promises)
+            .then(() => {
+                emuWAN.interfaces.forEach((interface) => {interface.render()});
+                setTimeout(emuWAN.disableLoader, 50);
+
+                emuWAN.bridge = new Bridges_Module();
+                $('[data-action="add-bridge"]').on('click', (e) => {emuWAN.bridge.formCreateBridge()});
+                emuWAN.log('Loading success');
+            }, () => {
+                emuWAN.log('Loading fail');
+                emuWAN.appFailure();
+            });
     },
     loadInitialData: function() {
-        var promise = new Promise(function(resolve, reject){
-            $.get(NetworkInterface.API, function(response){
-                response = JSON.parse(response);
-                if (!response.success) {
-                    reject("Something went wrong");
-                }
-                response.response.forEach(function(interface){
-                    var obj = new NetworkInterface(interface);
-                    emuWAN.interfaces.push(obj);
-                });
-                emuWAN.log('Interfaces loaded');
-            }).then(function(){
-                // Get all simulations
-                var promises = [];
-                emuWAN.interfaces.forEach(function(interface){
-                    promises.push(interface.getSimulation());
-                });
-
-                $.when.apply($, promises)
-                .then(function(){
-                    resolve("Success!");
-                }, function() {
-                    reject("Something went wrong");
-                });
+        return new Promise(async function(resolve, reject){
+            var interfacesResponse = await AjaxWrapper.get(NetworkInterface.API);
+            if (!interfacesResponse) {
+                reject(interfacesResponse.error);
+                return;
+            }
+            var promises = [];
+            interfacesResponse.response.forEach((interfaceJSON) => {
+                var interface = new NetworkInterface_Module(interfaceJSON);
+                emuWAN.interfaces.push(interface);
+                promises.push(interface.getSimulation());
+            });
+            Promise.all(promises).then(() => {
+                resolve("Loading success");
+            }, () => {
+                reject("Loading fail");
             });
         });
-        return promise;
     },
     disableLoader: function() {
         $('#loader').fadeTo(300, 0,() => {
@@ -87,68 +79,64 @@ emuWAN_Tools = {
     }
 }
 
-emuWAN_Interfaces = {
-    render: async function(interface) {
-        var cardSelector = '[data-interfaceId="'+interface.id+'"]';
+class NetworkInterface_Module {
+    containerSelector = $('#interface-cards');
+    cardSelector = false;
+    networkinterface = false;
+
+    constructor (json) {
+        this.networkinterface = new NetworkInterface(json);
+        $(this.networkinterface).bind('change', (e) => {this.render()});
+    }
+
+    getSimulation () {
+        return this.networkinterface.getSimulation();
+    }
+
+    async render () {
         var template = await emuWAN.templates.getTemplate('interfacecard');
-        var card = template(interface);
+        var card = template(this.networkinterface);
 
-        var existingCard = $('#interface-cards').find(cardSelector);
-        if (existingCard.length) {
-            $(cardSelector).replaceWith(card);
+        if (!this.cardSelector) {
+            this.containerSelector.append(card);
         } else {
-            $('#interface-cards').append(card);
+            $(this.cardSelector).replaceWith(card);
         }
+        this.cardSelector = this.containerSelector.find('[data-interfaceId="'+this.networkinterface.id+'"]');
 
-        $('[data-toggle="tooltip"]').tooltip();
-        emuWAN_Interfaces.addCardEvents(interface.id);
-    },
-    addCardEvents: function(interfaceId) {
-        var editInterfaceButton = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="edit-interface"]');
-        editInterfaceButton.on('click', (e) => {
-            var interface = emuWAN.interfaces.find(interface => interface.id === interfaceId);
-            emuWAN_Interfaces.formEditInterface(interface);
-        });
-        var editInterfaceButton = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="toggle-interface"]');
-        editInterfaceButton.on('click', (e) => {
-            var interface = emuWAN.interfaces.find(interface => interface.id === interfaceId);
-            $(e.currentTarget).prop('disabled', true).html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>');
-            interface.setStatus($(e.currentTarget).data('status'));
-        });
-        var editSimulationButton = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="edit-simulation"]');
-        editSimulationButton.on('click', (e) => {
-            var interface = emuWAN.interfaces.find(interface => interface.id === interfaceId);
-            emuWAN_Interfaces.formEditSimulation(interface);
-        });
-        var stopButton = $('[data-interfaceId="'+interfaceId+'"]').find('[data-action="stop-simulation"]');
-        stopButton.on('click', (e) => {
-            var interface = emuWAN.interfaces.find(interface => interface.id === interfaceId);
-            interface.simulation.reset();
-        });
-    },
-    formEditSimulation: function(interface) {
-        var params = {
-            editsimulation: true,
-            title: "Edit simulation " + interface.id,
-            interface: interface,
-            save: true
-        }
+        this.cardSelector.find('[data-toggle="tooltip"]').tooltip();
+        this.addCardEvents();
+        emuWAN.log("Rendered card: " + this.networkinterface.id);
+    }
+
+    addCardEvents () {
+        var editInterfaceButton = this.cardSelector.find('[data-action="edit-interface"]');
+        editInterfaceButton.on('click', (e) => {this.formEditInterface()});
         
-        emuWAN.modal.render(params);
-        $(emuWAN.modal).bind('save', function(e, formData){
-            interface.simulation.edit(formData).then(() => emuWAN.modal.hide(), (result) => {
-                if (result === false) {
-                    emuWAN.appFailure();
-                }
-                emuWAN.modal.processFormErrors(result.errors);
-            });
+        var editInterfaceButton = this.cardSelector.find('[data-action="toggle-interface"]');
+        editInterfaceButton.on('click', (e) => {
+            $(e.currentTarget).prop('disabled', true).html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>');
+            this.networkinterface.setStatus($(e.currentTarget).data('status'));
         });
-    },
-    formEditInterface: function(interface) {
+
+        var editSimulationButton = this.cardSelector.find('[data-action="edit-simulation"]');
+        editSimulationButton.on('click', (e) => {this.formEditSimulation()});
+
+        var stopButton = this.cardSelector.find('[data-action="stop-simulation"]');
+        stopButton.on('click', (e) => {
+            console.log('reset');
+            this.networkinterface.simulation.reset();
+        });
+
+        emuWAN.log('Added card events ' + this.networkinterface.id);
+    }
+
+    formEditInterface () {
+        var _self = this;
         var params = {
             editinterface: true,
-            title: "Edit interface " + interface.id,
-            interface: interface,
+            title: "Edit interface " + _self.networkinterface.id,
+            networkinterface: _self.networkinterface,
             save: true
         }
         
@@ -161,13 +149,53 @@ emuWAN_Interfaces = {
             }
         });
         $(emuWAN.modal).bind('save', function(e, formData){
-            interface.edit(formData).then(() => emuWAN.modal.hide(), (result) => {
+            _self.networkinterface.edit(formData)
+            .then(() => {
+                emuWAN.modal.hide();
+            }, (result) => {
                 if (result === false) {
                     emuWAN.appFailure();
                 }
                 emuWAN.modal.processFormErrors(result.errors);
             });
         });
+    }
+
+    formEditSimulation () {
+        var _self = this;
+        var params = {
+            editsimulation: true,
+            title: "Edit simulation " + _self.networkinterface.id,
+            interface: _self.networkinterface,
+            save: true
+        }
+        
+        emuWAN.modal.render(params);
+        $(emuWAN.modal).bind('save', function(e, formData){
+            _self.networkinterface.simulation.edit(formData).then(() => emuWAN.modal.hide(), (result) => {
+                if (result === false) {
+                    emuWAN.appFailure();
+                }
+                emuWAN.modal.processFormErrors(result.errors);
+            });
+        });
+    }
+
+    static refreshNetworkInterfaces () {
+        emuWAN.interfaces.forEach(async (interfaceModule, index) => {
+            var response = await interfaceModule.networkinterface.refresh();
+            if (!response) {
+                interfaceModule.cardSelector.remove();
+                emuWAN.interfaces.splice(index, 1);
+            }
+        });
+    }
+
+    static async addNewNetworkInterface(id) {
+        var response = await AjaxWrapper.get(NetworkInterface.API + id + '/');
+        var networkInterface = new NetworkInterface_Module(response.response);
+        emuWAN.interfaces.push(networkInterface);
+        networkInterface.render();
     }
 }
 
@@ -266,10 +294,13 @@ class Bridges_Module {
 
     actionCreateBridge (data) {
         var _self = this;
-        Bridge.create(data).then((bridge) => {
+        Bridge.create(data).then(async (bridge) => {
             _self.bridges.push(bridge);
             $(_self).trigger('render');
             emuWAN.modal.hide();
+
+            NetworkInterface_Module.refreshNetworkInterfaces();
+            NetworkInterface_Module.addNewNetworkInterface(bridge.id);
         }, (response) => {
             emuWAN.modal.processFormErrors(response.errors);
         });
@@ -296,8 +327,11 @@ class Bridges_Module {
             .then(() => {
                 _self.bridges.splice(targetIndex, 1);
                 $(_self).trigger('render');
-            }).finally(()=> {
                 emuWAN.modal.hide();
+                
+                NetworkInterface_Module.refreshNetworkInterfaces();
+            }, (result) => {
+                emuWAN.modal.processFormErrors(result.errors);
             });
     }
 }
@@ -314,6 +348,7 @@ class Modal_Module {
         _self.selector.on('hidden.bs.modal', () => _self.dispose());
         _self.selector.find('[data-save="modal"]').on('click', (e) => {_self.processSave()});
         _self.selector.find('[data-accept="modal"]').on('click', (e) => {_self.processAccept()});
+        emuWAN.log('Modal rendered');
     }
 
     dispose () {

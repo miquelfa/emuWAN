@@ -22,15 +22,14 @@ class NetworkInterface {
 
     getSimulation() {
         var _self = this;
-        return $.get(Simulation.API + _self.id + '/', function(response) {
-            response = JSON.parse(response);
-            if (!response.success) {
-                reject("Something went wrong");
-            }
-            _self.simulation = new Simulation(response.response);
-            $(_self.simulation).bind('change', () => $(_self).trigger('change'));
-            emuWAN.log('Simulation loaded: ' + _self.id);
-        });
+        return AjaxWrapper.get(Simulation.API + _self.id + '/')
+            .then((data) => {
+                _self.simulation = new Simulation(data.response);
+                $(_self.simulation).bind('change', () => $(_self).trigger('change'));
+                emuWAN.log('Simulation loaded: ' + _self.id);
+            }, (failure) => {
+                emuWAN.log('Simulation loading failed: ' + _self.id);
+            });
     }
 
     edit (params) {
@@ -55,6 +54,17 @@ class NetworkInterface {
             .then((response) => {
                 _self.set(response.response);
                 emuWAN.log('Interface status changed: ' + _self.id);
+            });
+    }
+
+    async refresh () {
+        var _self = this;
+        return AjaxWrapper.get(NetworkInterface.API + _self.id + '/')
+            .then((response) => {
+                _self.set(response.response);
+                return true;
+            }, (errors) => {
+                return false;
             });
     }
 }

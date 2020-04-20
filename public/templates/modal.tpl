@@ -46,14 +46,14 @@
         <div class="form-row justify-content-around">
             <div class="form-group col-sm-5">
                 <label for="CIDR">Address</label>
-                <input id="CIDR" name="CIDR" type="text" class="form-control" {{#interface.IP4.CIDR}}value="{{interface.IP4.CIDR}}"{{/interface.IP4.CIDR}} {{#interface.IP4.dynamic}}disabled{{/interface.IP4.dynamic}}>
+                <input id="CIDR" name="CIDR" type="text" class="form-control" value="{{networkinterface.IP4.CIDR}}" {{#if interface.IP4.dynamic}}disabled{{/if}}>
                 <div data-inputname="CIDR" class="invalid-feedback"></div>
                 <small id="CIDRhelp" class="form-text text-muted">CIDR format: address/mask</small>
             </div>
             <div class="form-group col-sm-5">
                 <label for="DHCP">DHCP</label><br/>
                 <label class="switch">
-                    <input id="DHCP" name="DHCP" type="checkbox" {{#interface.IP4.dynamic}}checked{{/interface.IP4.dynamic}}>
+                    <input id="DHCP" name="DHCP" type="checkbox" {{#if interface.IP4.dynamic}}checked{{/if}}>
                     <span class="slider"></span>
                 </label>
             </div>
@@ -72,9 +72,9 @@
                 <div class="row justify-content-around">
                     {{#each interfaces}}
                     <div class="col-sm-2">
-                        <label for="interface[{{id}}]">{{id}}</label><br/>
+                        <label for="interface[{{networkinterface.id}}]">{{networkinterface.id}}</label><br/>
                         <label class="switch">
-                            <input id="interfaces[{{id}}]" name="interfaces[]" value="{{id}}" type="checkbox">
+                            <input id="interfaces[{{networkinterface.id}}]" name="interfaces[]" value="{{networkinterface.id}}" type="checkbox">
                             <span class="slider"></span>
                         </label>
                     </div>
