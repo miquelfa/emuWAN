@@ -263,6 +263,7 @@ class Bridges_Module {
             _self.setBridges(response);
         }, function(response) {
             if ("success" in response) {
+                _self.selector.html('');
                 return;
             }
             emuWAN.appFailure();

@@ -39,7 +39,11 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div id="bridges-container">
-                        
+                        <div class="text-center" style="margin-top: 10vh;">
+                            <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-6">
