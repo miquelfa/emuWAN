@@ -37,7 +37,7 @@
 
         private function _get()
         {
-            $command = sprintf("brctl show %s", $this->bridge);
+            $command = sprintf("%s show %s", BIN_BRCTL, $this->bridge);
             $out = shell_exec($command);
             if (preg_match_all('/\s*([\S]+)$/m', $out, $matches)) {
                 $matches = $matches[1];
@@ -50,9 +50,9 @@
 
         private function createNew()
         {
-            $commands[] = sprintf("sudo brctl addbr %s", $this->bridge);
+            $commands[] = sprintf("sudo %s addbr %s", BIN_BRCTL, $this->bridge);
             foreach($this->interfaces as $interface) {
-                $commands[] = sprintf("sudo brctl addif %s %s", $this->bridge, $interface);
+                $commands[] = sprintf("sudo %s addif %s %s", BIN_BRCTL, $this->bridge, $interface);
             }
             
             foreach ($commands as $command) {
@@ -70,7 +70,7 @@
         {
             \emuWAN\OSCommands\NetworkInterface::interfaceStatus($this->bridge, \emuWAN\OSCommands\NetworkInterface::STATUS_DOWN);
             
-            $command = sprintf("sudo brctl delbr %s", $this->bridge);
+            $command = sprintf("sudo %s delbr %s", BIN_BRCTL, $this->bridge);
             $out = shell_exec($command);
 
             if (strlen($out) || in_array($this->bridge, self::getList())) {
@@ -97,7 +97,7 @@
          */
         public static function getList()
         {
-            $command = 'brctl show';
+            $command = sprintf('%s show', BIN_BRCTL);
             $out = shell_exec($command);
             if (preg_match_all('/(?<=\n)^([^\s]+)/m', $out, $matches)) {
                 return $matches[1];

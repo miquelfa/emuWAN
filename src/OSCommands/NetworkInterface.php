@@ -27,7 +27,7 @@
         private function _down()
         {
             try {
-                $command = sprintf('sudo ip link set dev %s down', $this->interface);
+                $command = sprintf('sudo %s link set dev %s down', BIN_IP, $this->interface);
                 if (strlen(shell_exec($command))) {
                     return false;
                 }
@@ -40,7 +40,7 @@
         private function _up()
         {
             try {
-                $command = sprintf('sudo ip link set dev %s up', $this->interface);
+                $command = sprintf('sudo %s link set dev %s up', BIN_IP, $this->interface);
                 if (strlen(shell_exec($command))) {
                     return false;
                 }
@@ -53,7 +53,7 @@
         private function _flushAddresses()
         {
             try {
-                $command = sprintf('sudo ip addr flush dev %s', $this->interface);
+                $command = sprintf('sudo %s addr flush dev %s', BIN_IP, $this->interface);
                 if (strlen(shell_exec($command))) {
                     return false;
                 }
@@ -66,7 +66,7 @@
         private function _setAddress($address)
         {
             try {
-                $command = sprintf('sudo ip addr add %s dev %s brd +', $address, $this->interface);
+                $command = sprintf('sudo %s addr add %s dev %s brd +', BIN_IP, $address, $this->interface);
                 if (strlen(shell_exec($command))) {
                     return false;
                 }
@@ -82,7 +82,8 @@
          */
         public static function getDeviceInterfaceList()
         {
-            $out = shell_exec('ip link show');
+            $command = sprintf('%s link show', BIN_IP);
+            $out = shell_exec($command);
             if (!preg_match_all('/^[0-9]*\:\ ([a-z0-9]*)\:\ /m', $out, $interfaces)) {
                 throw new \Exception("No interfaces found"); // TODO Handle this
             }
@@ -118,7 +119,8 @@
                 ]
             ];
 
-            $out = shell_exec('ip a show ' . $interface);
+            $command = sprintf('%s a show %s', BIN_IP, $interface);
+            $out = shell_exec($command);
             if (preg_match('/state\ ([A-Z]*)/', $out, $state)) {
                 $details['status'] = \emuWAN\Tools::toBool($state[1]);
             }
@@ -145,11 +147,13 @@
                     $details['IP4']['dynamic'] = false;
                 }
             }
-            $out = shell_exec("sudo ethtool " . $interface);
+            $command = sprintf('sudo %s %s', BIN_ETHTOOL, $interface);
+            $out = shell_exec($command);
             if (preg_match('/Speed\:\ ([0-9]*)/', $out, $speed)) {
                 $details['speed'] = $speed[1];
             }
-            $out = shell_exec("brctl show");
+            $command = sprintf('%s show', BIN_BRCTL);
+            $out = shell_exec($command);
             if (preg_match(sprintf('/^%s/m', $interface), $out)) {
                 $details['bridge']['status'] = 'a';
                 $details['bridge']['isbridge'] = true;

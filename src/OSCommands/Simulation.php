@@ -54,7 +54,7 @@
         private function _get()
         {
             try {
-                $command = sprintf("tc qdisc show dev %s", $this->interface);
+                $command = sprintf("%s qdisc show dev %s", BIN_TC, $this->interface);
                 $out = shell_exec($command);
                 if (preg_match('/delay\ ([0-9\.]*)ms/', $out, $delay)) {
                     $this->delay = (float) $delay[1];
@@ -75,7 +75,7 @@
         private function _reset()
         {
             try {
-                $command = sprintf("sudo tc qdisc del dev %s root", $this->interface);
+                $command = sprintf("sudo %s qdisc del dev %s root", BIN_TC, $this->interface);
                 shell_exec($command);
                 return true;
             } catch (\Exception $e) {
@@ -85,7 +85,7 @@
 
         private function buildCommand()
         {
-            $command = sprintf("sudo tc qdisc add dev %s root netem", $this->interface);
+            $command = sprintf("sudo %s qdisc add dev %s root netem", BIN_TC, $this->interface);
 
             if (!is_null($this->delay)) {
                 $command .= sprintf(" delay %sms", $this->delay);
