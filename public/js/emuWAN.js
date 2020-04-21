@@ -29,10 +29,14 @@ window.emuWAN = {
     },
     loadInitialData: function() {
         return new Promise(async function(resolve, reject){
-            var interfacesResponse = await AjaxWrapper.get(NetworkInterface.API);
-            if (!interfacesResponse) {
-                reject(interfacesResponse.error);
-                return;
+            try {
+                var interfacesResponse = await AjaxWrapper.get(NetworkInterface.API);
+                if (!interfacesResponse) {
+                    reject(interfacesResponse.error);
+                    return;
+                }
+            } catch(error) {
+                reject("Loading fail");
             }
             var promises = [];
             interfacesResponse.response.forEach((interfaceJSON) => {
@@ -279,7 +283,7 @@ class Bridges_Module {
         Bridge.getAll().then(function(response){
             _self.setBridges(response);
         }, function(response) {
-            if ("success" in response) {
+            if (typeof response === 'object' && "success" in response) {
                 _self.selector.html('');
                 return;
             }
