@@ -20,6 +20,7 @@ window.emuWAN = {
 
                 emuWAN.bridge = new Bridges_Module();
                 $('[data-action="add-bridge"]').on('click', (e) => {emuWAN.bridge.formCreateBridge()});
+                $('[data-action="refresh"]').on('click', (e) => {emuWAN.refresh()});
                 emuWAN.log('Loading success');
             }, () => {
                 emuWAN.log('Loading fail');
@@ -35,9 +36,9 @@ window.emuWAN = {
             }
             var promises = [];
             interfacesResponse.response.forEach((interfaceJSON) => {
-                var interface = new NetworkInterface_Module(interfaceJSON);
-                emuWAN.interfaces.push(interface);
-                promises.push(interface.getSimulation());
+                var interface_module = new NetworkInterface_Module(interfaceJSON);
+                emuWAN.interfaces.push(interface_module);
+                promises.push(interface_module.getSimulation());
             });
             Promise.all(promises).then(() => {
                 resolve("Loading success");
@@ -59,6 +60,22 @@ window.emuWAN = {
     appFailure: function() {
         $('#loader').css('opacity', 1).addClass('d-block').removeClass('d-none');
         setTimeout(() => alert("Something went wrong! Please refresh the page"), 100);
+    },
+    refresh: function() {
+        NetworkInterface_Module.refreshNetworkInterfaces();
+        AjaxWrapper.get(NetworkInterface.API)
+            .then((response) => {
+                response.response.forEach(async (object) => {
+                    var found = emuWAN.interfaces.find(module => object.id == module.networkinterface.id);
+                    if (!found) {
+                        // TODO: this can be optimized, as we have the complete object already
+                        NetworkInterface_Module.addNewNetworkInterface(object.id);
+                    }
+                });
+            }, () => {
+                emuWAN.appFailure();
+            });
+        emuWAN.bridge = new Bridges_Module();
     }
 }
 

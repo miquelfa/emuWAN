@@ -25,8 +25,8 @@
                             <i class="fas fa-cog"></i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                            <a class="dropdown-item" data-action="add-bridge" title="Add new bridge interface" href="#">Add bridge</a>
-                            <!--<a class="dropdown-item" href="#">Dropdown link</a>-->
+                            <a class="dropdown-item" data-action="add-bridge" title="Add new bridge interface" href="#"><i class="fas fa-plus"></i>&nbsp;Add bridge</a>
+                            <a class="dropdown-item" data-action="refresh" title="Refresh information"href="#"><i class="fas fa-sync"></i>&nbsp;Refresh</a>
                         </div>
                     </div>
                 </div>
