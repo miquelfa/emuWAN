@@ -1,8 +1,8 @@
-<div class="col-xl-3 col-lg-4 col-md-6 p-2" data-interfaceId="{{id}}">
+<div class="col-lg-4 col-md-6 p-2" data-interfaceId="{{id}}">
     <div class="card shadow box-interface">
         <div class="card-header">
-            <div class="row">
-                <div class="col-sm-9 align-middle">
+            <div class="row justify-content-between">
+                <div class="col-sm-8 align-middle">
                     <h2>
                         <b>{{id}}</b>&nbsp;
                         {{#status}}
@@ -13,13 +13,14 @@
                         {{/status}}
                     </h2>
                 </div>
-                <div class="col-sm-3 text-right align-middle">
-                    {{#bridge.inbridge}}
-                    <button title="Bridged interface" type="button" class="btn btn-sm btn-secondary float-right" disabled>Bridged</button>
-                    {{/bridge.inbridge}}
-                    {{^bridge.inbridge}}
-                    <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+                <div class="col-sm-4 text-right align-middle">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        {{#bridge.inbridge}}
+                        <button title="Bridged interface" type="button" class="btn btn-sm btn-secondary float-right" disabled>br</button>
+                        {{/bridge.inbridge}}
+                        {{^bridge.inbridge}}
                         <button data-action="edit-interface" title="Edit interface" type="button" class="btn btn-sm btn-primary float-right"><i class="fas fa-edit"></i></button>
+                        {{/bridge.inbridge}}
                         {{#status}}
                         <button data-action="toggle-interface" title="Set nterface DOWN" data-status="down" type="button" class="btn btn-sm btn-danger float-right"><i class="fas fa-unlink"></i></button>
                         {{/status}}
@@ -27,7 +28,6 @@
                         <button data-action="toggle-interface" title="Set nterface UP" data-status="up" type="button" class="btn btn-sm btn-success float-right"><i class="fas fa-link"></i></button>
                         {{/status}}
                     </div>
-                    {{/bridge.inbridge}}
                 </div>
             </div>
         </div>
@@ -44,11 +44,11 @@
             {{^bridge.isbridge}}
             <hr>
             <div class="row">
-                <div class="col-sm-9">
+                <div class="col-sm-8">
                     <h2>Simulation</h2>
                 </div>
-                <div class="col-sm-3 text-right">
-                    <div class="btn-group btn-group-toggle btn-block" data-toggle="buttons">
+                <div class="col-sm-4 text-right">
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
                         <button data-action="edit-simulation" title="Edit simulation" type="button" class="btn btn-sm btn-primary float-right"><i class="fas fa-edit"></i></button>
                         {{#simulation.status}}
                         <button data-action="stop-simulation" title="Stop simulation" type="button" class="btn btn-sm btn-danger float-right"><i class="fas fa-stop"></i></button>

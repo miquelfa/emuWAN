@@ -14,8 +14,8 @@
         <script defer src="/vendor/fontawesome/all.min.js"></script>
     </head>
     <body>
-        <div class="container-fluid" style="margin-top: 20px" id="main-panel">
-            <div class="row justify-content-center">
+        <div class="container" style="margin-top: 20px" id="main-panel">
+            <div class="row justify-content-between">
                 <div class="col-sm-6">
                     <h1>Interfaces</h1>
                 </div>
@@ -32,7 +32,7 @@
                 </div>
             </div>
             
-            <div class="row justify-content-center" id="interface-cards">
+            <div class="row" id="interface-cards">
 
             </div>
 
@@ -47,6 +47,8 @@
                     </div>
                 </div>
                 <div class="col-sm-6">
+                    <div id="routes-container">
+                    </div>
                 </div>
             </div>
         </div>
