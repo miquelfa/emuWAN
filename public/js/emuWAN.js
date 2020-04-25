@@ -134,8 +134,8 @@ class NetworkInterface_Module {
         var editInterfaceButton = this.cardSelector.find('[data-action="edit-interface"]');
         editInterfaceButton.on('click', (e) => {this.formEditInterface()});
         
-        var editInterfaceButton = this.cardSelector.find('[data-action="toggle-interface"]');
-        editInterfaceButton.on('click', (e) => {
+        var toggleInterfaceButton = this.cardSelector.find('[data-action="toggle-interface"]');
+        toggleInterfaceButton.on('click', (e) => {
             $(e.currentTarget).prop('disabled', true).html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>');
             this.networkinterface.setStatus($(e.currentTarget).data('status'));
         });
@@ -152,7 +152,7 @@ class NetworkInterface_Module {
         emuWAN.log('Added card events ' + this.networkinterface.id);
     }
 
-    formEditInterface () {
+    async formEditInterface () {
         var _self = this;
         var params = {
             editinterface: true,
@@ -161,8 +161,11 @@ class NetworkInterface_Module {
             save: true
         }
         
-        emuWAN.modal.render(params);
+        await emuWAN.modal.render(params);
         emuWAN.modal.selector.find('input#DHCP').on('change', function(e) {
+            if (!_self.networkinterface.status) {
+                emuWAN.modal.processFormErrors([{key: "none", error: "Cannot toggle DHCP if interface is down"}])
+            }
             if($(e.target).prop("checked")) {
                 emuWAN.modal.selector.find('input#CIDR').prop("disabled", true);
             } else {
@@ -419,6 +422,7 @@ class Modal_Module {
     processFormErrors (errors) {
         var _self = this;
         var form = _self.selector.find('[data-form="modal"]');
+        _self.clearFormErrors();
         errors.forEach((error) => {
             var input = form.find('[name="'+error.key+'"]');
             var errorfield = form.find('[data-inputname="'+error.key+'"]');
