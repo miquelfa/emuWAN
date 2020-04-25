@@ -12,7 +12,15 @@
         const STATUS_UP = 'up';
         const STATUS_DOWN = 'down';
 
-        private $interface = NULL;
+        private $interface = null;
+        private $status = null;
+        private $MTU = null;
+        private $MAC = null;
+        private $IP4 = null;
+        private $bridge = null;
+
+        private $commandShow = null;
+        private $commandBridge = null;
 
         function __construct($interface)
         {
@@ -76,6 +84,100 @@
             return true;
         }
 
+        private function getCommandShow()
+        {
+            if (!is_null($this->commandShow)) {
+                return $this->commandShow;
+            }
+            $command = sprintf('%s a show %s', BIN_IP, $this->interface);
+            $this->commandShow = shell_exec($command);
+            return $this->commandShow;
+        }
+
+        private function getCommandBridge()
+        {
+            if (!is_null($this->commandBridge)) {
+                return $this->commandBridge;
+            }
+            $command = sprintf('%s show', BIN_BRCTL);
+            $this->commandBridge = shell_exec($command);
+            return $this->commandBridge;
+        }
+
+        private function getStatus()
+        {
+            if (!is_null($this->status)) {
+                return $this->status;
+            }
+            if (preg_match('/state\ ([A-Z]*)/', $this->getCommandShow(), $state)) {
+                $this->status = \emuWAN\Tools::toBool($state[1]);
+            }
+            return $this->status;
+        }
+
+        private function getMTU()
+        {
+            if (!is_null($this->MTU)) {
+                return $this->MTU;
+            }
+            if (preg_match('/mtu\ ([0-9]*)/', $this->getCommandShow(), $mtu)) {
+                $this->MTU = $mtu[1];
+            }
+            return $this->MTU;
+        }
+
+        private function getMAC()
+        {
+            if (!is_null($this->MAC)) {
+                return $this->MAC;
+            }
+            if (preg_match('/link\/ether\ (([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))/', $this->getCommandShow(), $mac)) {
+                $this->MAC = $mac[1];
+            }
+            return $this->MAC;
+        }
+
+        private function getIP4()
+        {
+            if(!is_null($this->IP4)) {
+                return $this->IP4;
+            }
+            if (preg_match('/inet\ (([0-9]{1,3}\.){3}([0-9]{1,3}){1}\/[0-9]{1,2})/', $this->getCommandShow(), $ip4cidr)) {
+                $exploded = explode('/', $ip4cidr[1]);
+                $this->IP4['status'] = true;
+                $this->IP4['CIDR'] = $ip4cidr[1];
+                $this->IP4['address'] = $exploded[0];
+                $this->IP4['mask'] = $exploded[1];
+            }
+            if (preg_match('/brd\ (([0-9]{1,3}\.){3}([0-9]{1,3}){1})/', $this->getCommandShow(), $broadcast)) {
+                $this->IP4['broadcast'] = $broadcast[1];
+            }
+            if (!is_null($this->IP4['CIDR'])) {
+                if (preg_match('/inet ' . preg_quote($this->IP4['CIDR'], "/") . ' .+ dynamic/', $this->getCommandShow())) {
+                    $this->IP4['dynamic'] = true;
+                } else {
+                    $this->IP4['dynamic'] = false;
+                }
+            }
+            return $this->IP4;
+        }
+
+        private function getBridge()
+        {
+            if (!is_null($this->bridge)) {
+                return $this->bridge;
+            }
+            if (preg_match(sprintf('/^%s/m', $this->interface), $this->getCommandBridge())) {
+                $this->bridge['status'] = true;
+                $this->bridge['isbridge'] = true;
+            }
+            if (preg_match(sprintf('/%s$/m', $this->interface), $this->getCommandBridge())) {
+                $this->bridge['status'] = true;
+                $this->bridge['inbridge'] = true;
+            }
+            return $this->bridge;
+        }
+
         /**
          * Retrieves a list of present interfaces
          * @return      array   The list of interfaces with its detailed information.
@@ -98,69 +200,22 @@
          */
         public static function getInterfaceDetails($interface)
         {
+            $networkInterface = new self($interface);
+
             $details = [
                 'id' => $interface,
-                'status' => null,
-                'mtu' => null,
-                'MAC' => null,
-                'speed' => null,
-                'IP4' => [
-                    'status' => false,
-                    'CIDR' => null,
-                    'address' => null,
-                    'mask' => null,
-                    'broadcast' => null,
-                    'dynamic' => null
-                ],
-                'bridge' => [
-                    'status' => false,
-                    'isbridge' => false,
-                    'inbridge' => false
-                ]
+                'status' => $networkInterface->getStatus(),
+                'mtu' => $networkInterface->getMTU(),
+                'MAC' => $networkInterface->getMAC(),
+                //'speed' => $networkInterface->getSpeed(),
+                'IP4' => $networkInterface->getIP4(),
+                'bridge' => $networkInterface->getBridge()
             ];
 
-            $command = sprintf('%s a show %s', BIN_IP, $interface);
-            $out = shell_exec($command);
-            if (preg_match('/state\ ([A-Z]*)/', $out, $state)) {
-                $details['status'] = \emuWAN\Tools::toBool($state[1]);
-            }
-            if (preg_match('/mtu\ ([0-9]*)/', $out, $mtu)) {
-                $details['mtu'] = $mtu[1];
-            }
-            if (preg_match('/link\/ether\ (([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))/', $out, $mac)) {
-                $details['MAC'] = $mac[1];
-            }
-            if (preg_match('/inet\ (([0-9]{1,3}\.){3}([0-9]{1,3}){1}\/[0-9]{1,2})/', $out, $ip4cidr)) {
-                $exploded = explode('/', $ip4cidr[1]);
-                $details['IP4']['status'] = true;
-                $details['IP4']['CIDR'] = $ip4cidr[1];
-                $details['IP4']['address'] = $exploded[0];
-                $details['IP4']['mask'] = $exploded[1];
-            }
-            if (preg_match('/brd\ (([0-9]{1,3}\.){3}([0-9]{1,3}){1})/', $out, $broadcast)) {
-                $details['IP4']['broadcast'] = $broadcast[1];
-            }
-            if (!is_null($details['IP4']['CIDR'])) {
-                if (preg_match('/inet ' . preg_quote($details['IP4']['CIDR'], "/") . ' .+ dynamic/', $out)) {
-                    $details['IP4']['dynamic'] = true;
-                } else {
-                    $details['IP4']['dynamic'] = false;
-                }
-            }
             $command = sprintf('sudo %s %s', BIN_ETHTOOL, $interface);
             $out = shell_exec($command);
             if (preg_match('/Speed\:\ ([0-9]*)/', $out, $speed)) {
                 $details['speed'] = $speed[1];
-            }
-            $command = sprintf('%s show', BIN_BRCTL);
-            $out = shell_exec($command);
-            if (preg_match(sprintf('/^%s/m', $interface), $out)) {
-                $details['bridge']['status'] = 'a';
-                $details['bridge']['isbridge'] = true;
-            }
-            if (preg_match(sprintf('/%s$/m', $interface), $out)) {
-                $details['bridge']['status'] = 'a';
-                $details['bridge']['inbridge'] = true;
             }
 
             return $details;
