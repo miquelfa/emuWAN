@@ -80,8 +80,11 @@ class Simulation {
         this.id = json.id;
         this.status = json.status;
         this.delay = json.delay;
+        this.delayVariation = json.delayVariation;
         this.loss = json.loss;
+        this.lossCorrelation = json.lossCorrelation;
         this.reorder = json.reorder;
+        this.reorderCorrelation = json.reorderCorrelation;
 
         if (triggerChangeEvent) {
             emuWAN.log('Simulation trigger change: ' + this.id);

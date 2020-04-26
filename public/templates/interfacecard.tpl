@@ -61,9 +61,12 @@
             </div>
             <div class="mt-1">
                 {{#if simulation.status}}
-                {{#simulation.delay}}<span class="font-weight-bold">Delay: </span> {{this}} ms<br/>{{/simulation.delay}}
-                {{#simulation.loss}}<span class="font-weight-bold">Packet loss: </span> {{this}} %<br/>{{/simulation.loss}}
-                {{#simulation.reorder}}<span class="font-weight-bold">Packet reordering: </span> {{this}} %<br/>{{/simulation.reorder}}
+                {{#if simulation.delay}}<span class="font-weight-bold">Delay: </span> {{simulation.delay}} ms<br/>{{/if}}
+                {{#if simulation.delayVariation}}<span class="font-weight-bold">Delay variation: </span> {{simulation.delayVariation}} ms<br/>{{/if}}
+                {{#if simulation.loss}}<span class="font-weight-bold">Packet loss: </span> {{simulation.loss}} %<br/>{{/if}}
+                {{#if simulation.lossCorrelation}}<span class="font-weight-bold">Loss correlation: </span> {{simulation.lossCorrelation}} %<br/>{{/if}}
+                {{#if simulation.reorder}}<span class="font-weight-bold">Packet reordering: </span> {{simulation.reorder}} %<br/>{{/if}}
+                {{#if simulation.reorderCorrelation}}<span class="font-weight-bold">Reordering correlation: </span> {{simulation.reorderCorrelation}} %<br/>{{/if}}
                 {{else}}
                 No running simulation
                 {{/if}}

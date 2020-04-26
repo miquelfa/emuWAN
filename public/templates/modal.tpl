@@ -10,8 +10,16 @@
         <div class="form-row">
             <div class="form-group col-sm-4">
                 <label for="delay">Delay</label>
-                <div class="input-group mb-3">
-                    <input id="delay" name="delay" type="number" class="form-control" {{#interface.simulation.status}}value="{{interface.simulation.delay}}"{{/interface.simulation.status}}>
+                <div class="input-group mb-1">
+                    <input id="delay" name="delay" type="number" class="form-control" value="{{interface.simulation.delay}}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">ms</span>
+                    </div>
+                    <div data-inputname="delay" class="invalid-feedback"></div>
+                </div>
+                <label for="delayVariation">Delay variation</label>
+                <div class="input-group">
+                    <input id="delayVariation" name="delayVariation" class="form-control" value="{{interface.simulation.delayVariation}}">
                     <div class="input-group-append">
                         <span class="input-group-text">ms</span>
                     </div>
@@ -20,22 +28,38 @@
             </div>
             <div class="form-group col-sm-4">
                 <label for="reorder">Packet reordering</label>
-                <div class="input-group">
-                    <input id="reorder" name="reorder" type="number" class="form-control" {{#interface.simulation.status}}value="{{interface.simulation.reorder}}"{{/interface.simulation.status}}>
+                <div class="input-group mb-1">
+                    <input id="reorder" name="reorder" type="number" class="form-control" value="{{interface.simulation.reorder}}">
                     <div class="input-group-append">
                         <span class="input-group-text">%</span>
                     </div>
                     <div data-inputname="reorder" class="invalid-feedback"></div>
                 </div>
+                <label for="reorderCorrelation">Reordering correlation </label>
+                <div class="input-group">
+                    <input id="reorderCorrelation" name="reorderCorrelation" type="number" class="form-control" value="{{interface.simulation.reorderCorrelation}}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">%</span>
+                    </div>
+                    <div data-inputname="reorderCorrelation" class="invalid-feedback"></div>
+                </div>
             </div>
             <div class="form-group col-sm-4">
                 <label for="loss">Packet loss</label>
-                <div class="input-group mb-3">
-                    <input id="loss" name="loss" type="number" class="form-control" {{#interface.simulation.status}}value="{{interface.simulation.loss}}"{{/interface.simulation.status}}>
+                <div class="input-group mb-1">
+                    <input id="loss" name="loss" type="number" class="form-control" value="{{interface.simulation.loss}}">
                     <div class="input-group-append">
                         <span class="input-group-text">%</span>
                     </div>
                     <div data-inputname="loss" class="invalid-feedback"></div>
+                </div>
+                <label for="lossCorrelation">Loss correlation</label>
+                <div class="input-group mb-1">
+                    <input id="lossCorrelation" name="lossCorrelation" type="number" class="form-control" value="{{interface.simulation.lossCorrelation}}">
+                    <div class="input-group-append">
+                        <span class="input-group-text">%</span>
+                    </div>
+                    <div data-inputname="lossCorrelation" class="invalid-feedback"></div>
                 </div>
             </div>
         </div>
