@@ -7,7 +7,7 @@
      */
     namespace emuWAN\OSCommands;
 
-    class Simulation
+    class Simulation extends Base
     {
         private $interface = null;
         private $delay = null;
@@ -84,8 +84,8 @@
         private function _get()
         {
             try {
-                $command = sprintf("%s qdisc show dev %s", BIN_TC, $this->interface);
-                $out = shell_exec($command);
+                $args = sprintf("qdisc show dev %s", $this->interface);
+                $out = $this->execute(Base::TC, $args);
                 if (preg_match('/delay\ *([0-9\.]*)ms/', $out, $delay)) {
                     $this->delay = (float) $delay[1];
                 }
@@ -114,50 +114,50 @@
         private function _reset()
         {
             try {
-                $command = sprintf("sudo %s qdisc del dev %s root", BIN_TC, $this->interface);
-                shell_exec($command);
+                $args = sprintf("qdisc del dev %s root", $this->interface);
+                $this->execute(Base::TC, $args, true);
                 return true;
             } catch (\Exception $e) {
                 return false;
             }
         }
 
-        private function buildCommand()
+        private function buildArguments()
         {
-            $command = sprintf("sudo %s qdisc add dev %s root netem", BIN_TC, $this->interface);
+            $args = sprintf("qdisc add dev %s root netem", $this->interface);
 
             if (!is_null($this->delay)) {
-                $command .= sprintf(" delay %dms", $this->delay);
+                $args .= sprintf(" delay %dms", $this->delay);
                 if (!is_null($this->delayVariation)) {
-                    $command .= sprintf(" %dms distribution normal", $this->delayVariation);
+                    $args .= sprintf(" %dms distribution normal", $this->delayVariation);
                 }
             }
             if (!is_null($this->reorder)) {
                 if (!is_null($this->delay)) {
-                    $command .= sprintf(" reorder %d%%", $this->reorder);
+                    $args .= sprintf(" reorder %d%%", $this->reorder);
                 } else {
-                    $command .= sprintf(" delay 10ms reorder %d%%", $this->reorder);
+                    $args .= sprintf(" delay 10ms reorder %d%%", $this->reorder);
                 }
                 if (!is_null($this->reorderCorrelation)) {
-                    $command .= sprintf(" %d%%", $this->reorderCorrelation);
+                    $args .= sprintf(" %d%%", $this->reorderCorrelation);
                 }
             }
             if (!is_null($this->loss)) {
-                $command .= sprintf(" loss %d%%", $this->loss);
+                $args .= sprintf(" loss %d%%", $this->loss);
                 if (!is_null($this->lossCorrelation)) {
-                    $command .= sprintf(" %d%%", $this->lossCorrelation);
+                    $args .= sprintf(" %d%%", $this->lossCorrelation);
                 }
             }
 
-            return $command;
+            return $args;
         }
 
-        private function execute()
+        private function run()
         {
             try {
-                $command = $this->buildCommand();
+                $args = $this->buildArguments();
                 $this->_reset();
-                shell_exec($command);
+                $this->execute(Base::TC, $args, true);
                 return true;
             } catch (\Exception $e) {
                 return false;
@@ -201,7 +201,7 @@
             if (strlen($params['reorderCorrelation']) && is_numeric($params['reorderCorrelation'])) {
                 $simulation->setReorderCorrelation((float) $params['reorderCorrelation']);
             }
-            return $simulation->execute();
+            return $simulation->run();
         }
 
         /**

@@ -7,12 +7,12 @@
      */
     namespace emuWAN\OSCommands;
 
-    class Bridge
+    class Bridge extends Base
     {
-        private $bridge = NULL;
-        private $interfaces = NULL;
+        private $bridge = null;
+        private $interfaces = null;
 
-        function __construct($bridge)
+        function __construct($bridge = null)
         {
             $this->setBridge($bridge);
         }
@@ -37,8 +37,8 @@
 
         private function _get()
         {
-            $command = sprintf("%s show %s", BIN_BRCTL, $this->bridge);
-            $out = shell_exec($command);
+            $args = sprintf("show %s", $this->bridge);
+            $out = $this->execute(Base::BRCTL, $args);
             if (preg_match_all('/\s*([\S]+)$/m', $out, $matches)) {
                 $matches = $matches[1];
                 unset($matches[0]);
@@ -48,15 +48,24 @@
             return $this->toArray();
         }
 
+        private function _getList()
+        {
+            $out = $this->execute(Base::BRCTL, 'show', true);
+            if (preg_match_all('/(?<=\n)^([^\s]+)/m', $out, $matches)) {
+                return $matches[1];
+            }
+            return [];
+        }
+
         private function createNew()
         {
-            $commands[] = sprintf("sudo %s addbr %s", BIN_BRCTL, $this->bridge);
+            $argss[] = sprintf("addbr %s", $this->bridge);
             foreach($this->interfaces as $interface) {
-                $commands[] = sprintf("sudo %s addif %s %s", BIN_BRCTL, $this->bridge, $interface);
+                $argss[] = sprintf("addif %s %s", $this->bridge, $interface);
             }
             
-            foreach ($commands as $command) {
-                $out = shell_exec($command);
+            foreach ($argss as $args) {
+                $this->execute(Base::BRCTL, $args, true);
             }
 
             if (!in_array($this->bridge, self::getList())) {
@@ -70,8 +79,9 @@
         {
             \emuWAN\OSCommands\NetworkInterface::interfaceStatus($this->bridge, \emuWAN\OSCommands\NetworkInterface::STATUS_DOWN);
             
-            $command = sprintf("sudo %s delbr %s", BIN_BRCTL, $this->bridge);
-            $out = shell_exec($command);
+            $args = sprintf("delbr %s", $this->bridge);
+            $out = $this->execute(Base::BRCTL, $args, true);
+            $out = shell_exec($args);
 
             if (strlen($out) || in_array($this->bridge, self::getList())) {
                 throw new \Exception("Failed on bridge deletion");
@@ -97,13 +107,8 @@
          */
         public static function getList()
         {
-            $command = sprintf('%s show', BIN_BRCTL);
-            $out = shell_exec($command);
-            if (preg_match_all('/(?<=\n)^([^\s]+)/m', $out, $matches)) {
-                return $matches[1];
-            }
-
-            return [];
+            $simulation = new self();
+            return $simulation->_getList();
         }
 
         /**

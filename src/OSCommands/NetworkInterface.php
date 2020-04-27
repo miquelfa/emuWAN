@@ -7,7 +7,7 @@
      */
     namespace emuWAN\OSCommands;
 
-    class NetworkInterface
+    class NetworkInterface extends Base
     {
         const STATUS_UP = 'up';
         const STATUS_DOWN = 'down';
@@ -18,16 +18,17 @@
         private $MAC = null;
         private $IP4 = null;
         private $bridge = null;
+        private $speed = null;
 
         private $commandShow = null;
         private $commandBridge = null;
 
-        function __construct($interface)
+        function __construct($interface = null)
         {
             $this->setInterface($interface);
         }
 
-        private function setInterface($interface)
+        public function setInterface($interface)
         {
             $this->interface = $interface;
         }
@@ -35,10 +36,10 @@
         private function _down()
         {
             try {
-                $command = sprintf('sudo %s link set dev %s down', BIN_IP, $this->interface);
-                if (strlen(shell_exec($command))) {
+                $args = sprintf('link set dev %s down', $this->interface);
+                $out = $this->execute(parent::IP, $args, true);
+                if (strlen($out))
                     return false;
-                }
             } catch (\Exception $e) {
                 return false;
             }
@@ -48,10 +49,10 @@
         private function _up()
         {
             try {
-                $command = sprintf('sudo %s link set dev %s up', BIN_IP, $this->interface);
-                if (strlen(shell_exec($command))) {
+                $args = sprintf('link set dev %s up', $this->interface);
+                $out = $this->execute(parent::IP, $args, true);
+                if (strlen($out)) 
                     return false;
-                }
             } catch (\Exception $e) {
                 return false;
             }
@@ -61,10 +62,10 @@
         private function _flushAddresses()
         {
             try {
-                $command = sprintf('sudo %s addr flush dev %s', BIN_IP, $this->interface);
-                if (strlen(shell_exec($command))) {
+                $args = sprintf('addr flush dev %s', $this->interface);
+                $out = $this->execute(parent::IP, $args, true);
+                if (strlen($out))
                     return false;
-                }
             } catch (\Exception $e) {
                 return false;
             }
@@ -74,10 +75,10 @@
         private function _setAddress($address)
         {
             try {
-                $command = sprintf('sudo %s addr add %s dev %s brd +', BIN_IP, $address, $this->interface);
-                if (strlen(shell_exec($command))) {
+                $args = sprintf('addr add %s dev %s brd +', $address, $this->interface);
+                $out = $this->execute(parent::IP, $args, true);
+                if (strlen($out))
                     return false;
-                }
             } catch (\Exception $e) {
                 return false;
             }
@@ -89,8 +90,8 @@
             if (!is_null($this->commandShow)) {
                 return $this->commandShow;
             }
-            $command = sprintf('%s a show %s', BIN_IP, $this->interface);
-            $this->commandShow = shell_exec($command);
+            $args = sprintf('a show %s', $this->interface);
+            $this->commandShow = $this->execute(parent::IP, $args);
             return $this->commandShow;
         }
 
@@ -99,8 +100,7 @@
             if (!is_null($this->commandBridge)) {
                 return $this->commandBridge;
             }
-            $command = sprintf('%s show', BIN_BRCTL);
-            $this->commandBridge = shell_exec($command);
+            $this->commandBridge = $this->execute(parent::BRCTL, 'show');
             return $this->commandBridge;
         }
 
@@ -135,6 +135,18 @@
                 $this->MAC = $mac[1];
             }
             return $this->MAC;
+        }
+
+        private function getSpeed()
+        {
+            if (!is_null($this->speed)) {
+                return $this->speed;
+            }
+            $out = $this->execute(parent::ETHTOOL, $this->interface, true);
+            if (preg_match('/Speed\:\ ([0-9]*)/', $out, $speed)) {
+                $this->speed = $speed[1];
+            }
+            return $this->speed;
         }
 
         private function getIP4()
@@ -178,19 +190,24 @@
             return $this->bridge;
         }
 
+        private function getAllInterfaces()
+        {
+            $out = $this->execute(parent::IP, 'link show');
+            if (!preg_match_all('/^[0-9]*\:\ ([a-z0-9]*)\:\ /m', $out, $interfaces)) {
+                throw new \Exception("No interfaces found"); // TODO Handle this
+            }
+
+            return $interfaces[1];
+        }
+
         /**
          * Retrieves a list of present interfaces
          * @return      array   The list of interfaces with its detailed information.
          */
         public static function getDeviceInterfaceList()
         {
-            $command = sprintf('%s link show', BIN_IP);
-            $out = shell_exec($command);
-            if (!preg_match_all('/^[0-9]*\:\ ([a-z0-9]*)\:\ /m', $out, $interfaces)) {
-                throw new \Exception("No interfaces found"); // TODO Handle this
-            }
-
-            return $interfaces[1];
+            $networkInterface = new self();
+            return $networkInterface->getAllInterfaces();
         }
 
         /**
@@ -207,16 +224,10 @@
                 'status' => $networkInterface->getStatus(),
                 'mtu' => $networkInterface->getMTU(),
                 'MAC' => $networkInterface->getMAC(),
-                //'speed' => $networkInterface->getSpeed(),
+                'speed' => $networkInterface->getSpeed(),
                 'IP4' => $networkInterface->getIP4(),
                 'bridge' => $networkInterface->getBridge()
             ];
-
-            $command = sprintf('sudo %s %s', BIN_ETHTOOL, $interface);
-            $out = shell_exec($command);
-            if (preg_match('/Speed\:\ ([0-9]*)/', $out, $speed)) {
-                $details['speed'] = $speed[1];
-            }
 
             return $details;
         }

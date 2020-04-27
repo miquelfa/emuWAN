@@ -12,6 +12,9 @@
     // DHCP response time delay (in seconds)
     define("DHCP_DELAY", 5);
 
+    // Check routing enabled on App Initialisation
+    define("CHECK_ROUTING", true);
+
     // Bin files for required packets
     define("BIN_BRCTL", '/sbin/brctl');
     define("BIN_TC", '/sbin/tc');

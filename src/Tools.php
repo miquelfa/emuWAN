@@ -20,7 +20,7 @@
         public static function toBool($value)
         {
             $trues = [1, 'up', 'true', 'yes', 'y', '1'];
-            if (in_array(strtolower($value), $trues)) {
+            if (in_array(strtolower(trim($value)), $trues)) {
                 return TRUE;
             }
             return FALSE;
