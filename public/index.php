@@ -1,6 +1,7 @@
 <?php
     // Include loader and all required classes
     include( dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . "loader.php" );
+    $response = new \emuWAN\Response();
 
     // Check App Initialisation requirements
     $error = '';
@@ -21,10 +22,13 @@
     if (strlen($error)) {
         $html = file_get_contents(TEMPLATES . DIRECTORY_SEPARATOR . 'failure.tpl');
         $html = str_replace('<ERROR_MESSAGE>', $error, $html);
-        echo $html;
+        $response->set($html);
+        $response->send();
         die;
     }
 
     // Initialize app
-    echo file_get_contents(TEMPLATES . DIRECTORY_SEPARATOR . 'index.tpl');
+    $index = file_get_contents(TEMPLATES . DIRECTORY_SEPARATOR . 'index.tpl');
+    $response->set($index);
+    $response->send();
 ?>
