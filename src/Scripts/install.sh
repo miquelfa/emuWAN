@@ -15,7 +15,7 @@
 #   which ip                    |   {{user}}    ALL=NOPASSWD: {{bin}}
 #   Find binary of tc           |   Add line to file
 #   which tc                    |   {{user}}    ALL=NOPASSWD: {{bin}}
-#   Find binary of whomai       |   Add line to file
+#   Find binary of whoami       |   Add line to file
 #   which whoami                |   {{user}}    ALL=NOPASSWD: {{bin}}
 
 /**********************NOOOOOOOOOOOO**************************/
