@@ -12,10 +12,11 @@
     }
     // Check if routing is enabled
     if (CHECK_ROUTING) {
-        $command->execute(\emuWAN\OSCommands\Base::CAT, '/proc/sys/net/ipv4/ip_forward', false, $out);
+        $out = $command->execute(\emuWAN\OSCommands\Base::CAT, '/proc/sys/net/ipv4/ip_forward');
+        //var_dump($out); die;
         if (!\emuWAN\Tools::toBool($out)) {
-            $error = "<p class=\"card-text\">Routing is not enabled, try running the following command from a shell console:</p>";
-            $error .= "<p class=\"card-text text-monospace\">su -c \"echo 1 > /proc/sys/net/ipv4/ip_forward\"</p>";
+            $error = "<p class=\"card-text\">Routing is not enabled, try running the following command from a root shell console:</p>";
+            $error .= "<p class=\"card-text text-monospace\">\"echo 1 > /proc/sys/net/ipv4/ip_forward\"</p>";
         }
     }
     // Process errors on Initialisation checks
