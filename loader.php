@@ -19,9 +19,6 @@
     // Public folders
     define("TEMPLATES", PUBLICACCESS . DIRECTORY_SEPARATOR . 'templates');
 
-    // Include configuration parameters
-    include(dirname(__FILE__) . "/config.php" );
-
     // Autoregister all classes and functions
     spl_autoload_register(function ($class) {
         $class = str_replace("emuWAN\\", "", $class);
@@ -29,4 +26,10 @@
         $filename = SRC . DIRECTORY_SEPARATOR . $class . ".php";
         include($filename);
     });
+    
+    // Include configuration parameters
+    if (!file_exists(dirname(__FILE__) . "/config.php")) {
+        die('Config file not found');
+    }
+    include(dirname(__FILE__) . "/config.php" );
 ?>
