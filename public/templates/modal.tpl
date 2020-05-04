@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="modal-body">
-    {{#editsimulation}}
+    {{#if editsimulation}}
     <form data-form="modal">
         <div class="form-row">
             <div class="form-group col-sm-4">
@@ -64,8 +64,8 @@
             </div>
         </div>
     </form>
-    {{/editsimulation}}
-    {{#editinterface}}
+    {{/if}}
+    {{#if editinterface}}
     <form data-form="modal">
         <div class="form-row justify-content-around">
             <div class="form-group col-sm-5">
@@ -83,8 +83,8 @@
             </div>
         </div>
     </form>
-    {{/editinterface}}
-    {{#createbridge}}
+    {{/if}}
+    {{#if createbridge}}
     <form data-form="modal">
         <div class="form-row justify-content-around">
             <div class="form-group col-sm-3">
@@ -95,6 +95,7 @@
             <div class="form-group col-sm-9">
                 <div class="row justify-content-around">
                     {{#each interfaces}}
+                    {{#unless networkinterface.bridge.isbridge}}
                     <div class="col-sm-2">
                         <label for="interface[{{networkinterface.id}}]">{{networkinterface.id}}</label><br/>
                         <label class="switch">
@@ -102,21 +103,22 @@
                             <span class="slider"></span>
                         </label>
                     </div>
+                    {{/unless}}
                     {{/each}}
                 </div>
             </div>
         </div>
     </form>
-    {{/createbridge}}
-    {{#deletebridge}}
+    {{/if}}
+    {{#if deletebridge}}
     <p>Are you sure you want to delete this bridge interface?</p>
-    {{/deletebridge}}
+    {{/if}}
     <div class="alert alert-danger d-none" role="alert"></div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    {{#save}}<button type="button" class="btn btn-primary" data-save="modal" data-continue="modal">Save changes</button>{{/save}}
-    {{#accept}}<button type="button" class="btn btn-primary" data-accept="modal" data-continue="modal">Accept</button>{{/accept}}
+    {{#if save}}<button type="button" class="btn btn-primary" data-save="modal" data-continue="modal">Save changes</button>{{/if}}
+    {{#if accept}}<button type="button" class="btn btn-primary" data-accept="modal" data-continue="modal">Accept</button>{{/if}}
     <button type="button" class="btn btn-primary d-none" data-loading="modal">
         <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
         Loading...

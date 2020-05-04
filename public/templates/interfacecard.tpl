@@ -24,9 +24,9 @@
                         {{/if}}
                         {{/if}}
                         {{#if status}}
-                        <button data-action="toggle-interface" title="Set nterface DOWN" data-status="down" type="button" class="btn btn-sm btn-danger float-right"><i class="fas fa-unlink"></i></button>
+                        <button data-action="toggle-interface" title="Set interface DOWN" data-status="down" type="button" class="btn btn-sm btn-danger float-right"><i class="fas fa-unlink"></i></button>
                         {{else}}
-                        <button data-action="toggle-interface" title="Set nterface UP" data-status="up" type="button" class="btn btn-sm btn-success float-right"><i class="fas fa-link"></i></button>
+                        <button data-action="toggle-interface" title="Set interface UP" data-status="up" type="button" class="btn btn-sm btn-success float-right"><i class="fas fa-link"></i></button>
                         {{/if}}
                     </div>
                 </div>
