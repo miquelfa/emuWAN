@@ -21,7 +21,10 @@
             try {
                 foreach ($this->getAllBinaries() as $binary) {
                     $arg = sprintf("-v %s", $binary);
-                    $this->execute(self::COMMAND, $arg);
+                    $out = $this->execute(self::COMMAND, $arg);
+                    if (!strlen($out)) {
+                        return false;
+                    }
                 }
             } catch (\Exception $e) {
                 return false;
