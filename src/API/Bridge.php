@@ -59,6 +59,7 @@
 
         public function delete()
         {
+            $this->checkInterface();
             try {
                 $bridge = \emuWAN\OSCommands\Bridge::deleteBridge($this->interface);
                 $this->app->getResponse()->setSuccess(true);
