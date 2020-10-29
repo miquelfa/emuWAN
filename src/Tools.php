@@ -28,7 +28,7 @@
 
         public static function isValidCIDR($cidr)
         {
-            $parts = explode('/', $cidr);
+            $parts = explode(DIRECTORY_SEPARATOR, $cidr);
             if(count($parts) != 2) {
                 return false;
             }
