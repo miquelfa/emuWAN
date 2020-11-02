@@ -58,7 +58,7 @@
         private function validateHTTPMethod()
         {
             if (!in_array($method = $_SERVER['REQUEST_METHOD'], self::getValidHTTPMethods())) {
-                throw new \Exception("Method is invalid"); // TODO: should send response HTTP error code
+                throw new \Exception("Method is invalid");
             }
             $this->method = $method;
         }
@@ -71,7 +71,7 @@
             $requested_endpoint = \emuWAN\Tools::getArrayValue($_GET, 'endpoint');
             $endpoint = \emuWAN\Tools::getArrayValue(self::ENDPOINTS, $requested_endpoint);
             if (is_null($endpoint)) {
-                throw new \Exception("Endpoint is invalid"); // TODO: should send response HTTP error code
+                throw new \Exception("Endpoint is invalid");
             }
             $endpoint = "\\emuWAN\API\\" . $endpoint;
             $this->endpoint = new $endpoint();
@@ -85,7 +85,7 @@
             $requested_action = \emuWAN\Tools::getArrayValue($_GET, 'action');
             $action = strlen($requested_action) ? $this->method . '_' . $requested_action : $this->method;
             if (!method_exists($this->endpoint, $action)) {
-                throw new \Exception("Action is invalid"); // TODO: should send response HTTP error code
+                throw new \Exception("Action is invalid");
             }
             $this->action = $action;
         }
