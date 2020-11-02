@@ -68,8 +68,8 @@
          */
         private function validateEndpoint()
         {
-            $requestedendpoint = \emuWAN\Tools::getArrayValue($_GET, 'endpoint');
-            $endpoint = \emuWAN\Tools::getArrayValue(self::ENDPOINTS, $requestedendpoint);
+            $requested_endpoint = \emuWAN\Tools::getArrayValue($_GET, 'endpoint');
+            $endpoint = \emuWAN\Tools::getArrayValue(self::ENDPOINTS, $requested_endpoint);
             if (is_null($endpoint)) {
                 throw new \Exception("Endpoint is invalid"); // TODO: should send response HTTP error code
             }
@@ -82,8 +82,8 @@
          */
         private function validateAction()
         {
-            $requestedaction = \emuWAN\Tools::getArrayValue($_GET, 'action');
-            $action = strlen($requestedaction) ? $this->method . '_' . $requestedaction : $this->method;
+            $requested_action = \emuWAN\Tools::getArrayValue($_GET, 'action');
+            $action = strlen($requested_action) ? $this->method . '_' . $requested_action : $this->method;
             if (!method_exists($this->endpoint, $action)) {
                 throw new \Exception("Action is invalid"); // TODO: should send response HTTP error code
             }
